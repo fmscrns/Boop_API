@@ -82,3 +82,13 @@ class BusinessDto:
     })
 
     parser = api.parser()
+
+
+class PostDto:
+    api = Namespace("post", description="post related operations")
+
+    post = api.model("post", {
+        "content" : fields.String(required=True, description="post contents")
+    })
+
+    parser = api.parser

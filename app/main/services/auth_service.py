@@ -7,6 +7,7 @@ from app.main.services.help import Helper
 def login_user(data):
     try:
         user = User.query.filter_by(email=data.get("usernameOrEmail")).first()
+        print(user)
 
         if user and user.check_password(data.get("password")):
             auth_token = Helper.encode_auth_token(user.public_id)
