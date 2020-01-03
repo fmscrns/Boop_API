@@ -46,6 +46,11 @@ def delete_post(post_id):
         db.session.delete(post)
 
         db.session.commit()
+        
+        return Helper.return_resp_obj("success", "Post deleted successfully.", None, 200)
+
+    else:
+        return Helper.return_resp_obj("fail", "No post found.", None, 409)
 
 def update_post(post_id, data):
     post = Post.query.filter_by(post_id=post_id).first()

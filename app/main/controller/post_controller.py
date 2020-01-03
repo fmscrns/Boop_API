@@ -39,15 +39,16 @@ class PostOperations(Resource):
         
         else:
             return post
-    
+
+
     @token_required
-    @api.doc("delete post")
-    def delete(self, post_id):
-        post = delete_post(post_id)
+    @api.doc("delete a post")
+    def delete(self, public_id):
+        post = delete_post(public_id)
 
         if not post:
             api.abort(404)
-        
+            
         else:
             return post
     
@@ -66,8 +67,8 @@ class PostOperations(Resource):
 
 @api.route("/user/<username>")
 @api.param("username", "post of a specific user")
-@api.response(404, "Pets not found.")
-class GetUserPetList(Resource):
+@api.response(404, "posts not found.")
+class GetUserPostList(Resource):
     @token_required
     @api.doc("get posts of a user")
     @api.marshal_with(_post, envelope='data')
