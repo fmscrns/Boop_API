@@ -9,6 +9,7 @@ from .main.controller.breed_controller import api as breed_ns
 from .main.controller.business_controller import api as business_ns
 from .main.controller.circle_controller import api as circle_ns
 from .main.controller.post_controller import api as post_ns
+from .main.controller.deal_controller import api as deal_ns
 
 blueprint = Blueprint("api", __name__)
 
@@ -26,3 +27,4 @@ api.add_namespace(breed_ns, path="/breed")
 api.add_namespace(business_ns, path="/business")
 api.add_namespace(circle_ns, path="/circle")
 api.add_namespace(post_ns, path="/post")
+api.add_namespace(deal_ns, path="/deal")

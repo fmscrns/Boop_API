@@ -88,7 +88,23 @@ class PostDto:
     api = Namespace("post", description="post related operations")
 
     post = api.model("post", {
-        "content" : fields.String(required=True, description="post contents")
+        "post_id" : fields.String(require=True, description="post id"),
+        "content" : fields.String(required=True, description="post contents"),
+        "posted_on" : fields.DateTime(required=True, description="date posted")
     })
 
     parser = api.parser
+
+
+class DealDto:
+    api = Namespace("deal", dscription="pet sale/adopt related operations")
+
+    deal = api.model("deal", {
+        "public_id" : fields.String(required=True, description="transaction id"),
+        "price" : fields.Integer(required=True, description="pet price"),
+        "for_sale" : fields.Boolean(required=True, description="pet for adoption"),
+        "posted_on" : fields.Boolean(required=True, description="transaction post date")
+
+    })
+
+    parser=api.parser

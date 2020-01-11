@@ -1,5 +1,5 @@
 from .. import db, flask_bcrypt
-from app.main.models import business, circle, post
+from app.main.models import business, circle, post, deal
 
 user_pet_rel = db.Table("user_pet_rel",
     db.Column("user_id", db.String, db.ForeignKey("user.public_id")),
@@ -21,6 +21,11 @@ user_post_rel = db.Table("user_post_rel",
     db.Column("post_id", db.String, db.ForeignKey("post.post_id"))
 )
 
+user_sale_rel = db.Table("pet_sale_rel",
+    db.Column("user_id", db.String, db.ForeignKey("user.public_id")),
+    db.Column("trans_id", db.String, db.ForeignKey("deal.public_id")),
+)
+
 class User(db.Model):
     __tablename__ = "user"
 
@@ -40,6 +45,7 @@ class User(db.Model):
     business_rel = db.relationship("Business", secondary=user_business_rel, backref=db.backref("user", lazy=True))
     circle_rel = db.relationship("Circle", secondary=user_circle_rel, backref=db.backref("user", lazy=True))
     post_rel = db.relationship("Post", secondary=user_post_rel, backref=db.backref("author", lazy=True))
+    sale_rel = db.relationship("Transaction", secondary=user_sale_rel, backref=db.backref("seller", lazy=True))
 
     @property
     def password(self):

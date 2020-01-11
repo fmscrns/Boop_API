@@ -43,8 +43,8 @@ class PostOperations(Resource):
 
     @token_required
     @api.doc("delete a post")
-    def delete(self, public_id):
-        post = delete_post(public_id)
+    def delete(self, post_id):
+        post = delete_post(post_id)
 
         if not post:
             api.abort(404)

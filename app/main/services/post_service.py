@@ -29,7 +29,7 @@ def get_all_posts():
     return Post.query.all()
 
 def get_a_post(post_id):
-    post = db.session.query(Post.content, Post.posted_on).first()
+    post = db.session.query(Post.post_id, Post.content, Post.posted_on).first()
     print(post)
     post_obj = {}
 

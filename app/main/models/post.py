@@ -17,4 +17,4 @@ class Post(db.Model):
 
 
     def __repr__(self):
-        return "<pet '{}'>".format(self.pet_name)
+        return "<post '{}'>".format(self.post_id)

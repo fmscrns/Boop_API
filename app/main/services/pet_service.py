@@ -68,12 +68,19 @@ def delete_pet(public_id):
 def update_pet(public_id, data):
     pet = Pet.query.filter_by(public_id=public_id).first()
     
-    pet.pet_name = data["petName"]
-    pet.sex = data["sex"]
+    if pet:
+        pet.pet_name = data["petName"]
+        pet.bio = data["bio"]
+        pet.profPic_filename = data["profPicFilename"]
+        pet.sex = data["sex"]
+        pet.birthday = data["birthday"]
 
-    db.session.commit()
+        db.session.commit()
+        
+        return Helper.return_resp_obj("success", "Pet updated successfully.", None, 200)
 
-    return Helper.return_resp_obj("success", "Pet updated successfully.", None, 200)
+    else:
+        return Helper.return_resp_obj("fail", "No pet found.", None, 409)
 
 def get_user_pets(username):
     user_id = User.query.filter_by(username=username).first().public_id
