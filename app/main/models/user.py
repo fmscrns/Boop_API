@@ -26,6 +26,11 @@ user_sale_rel = db.Table("pet_sale_rel",
     db.Column("trans_id", db.String, db.ForeignKey("deal.public_id")),
 )
 
+user_comment_rel = db.Table("user_comment_rel",
+    db.Column("user_id", db.String, db.ForeignKey("user.public_id")),
+    db.Column("comm_id", db.String, db.ForeignKey("comment.public_id"))
+)
+
 class User(db.Model):
     __tablename__ = "user"
 
@@ -46,6 +51,7 @@ class User(db.Model):
     circle_rel = db.relationship("Circle", secondary=user_circle_rel, backref=db.backref("user", lazy=True))
     post_rel = db.relationship("Post", secondary=user_post_rel, backref=db.backref("author", lazy=True))
     sale_rel = db.relationship("Transaction", secondary=user_sale_rel, backref=db.backref("seller", lazy=True))
+    comm_rel = db.relationship("Comment", secondary=user_comment_rel, backref=db.backref("commenter", lazy=True))
 
     @property
     def password(self):

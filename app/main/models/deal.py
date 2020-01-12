@@ -15,7 +15,7 @@ class Deal(db.Model):
     price = db.Column(db.Integer, nullable=True)
     for_sale = db.Column(db.Boolean, nullable=False, default=False)
 
-    pet_price_rel = db.relationship("Pet", secondary=pet_price_rel, backref=db.backref("pet", lazy=True))
+    pet_rel = db.relationship("Pet", secondary=pet_price_rel, backref=db.backref("pet", lazy=True))
     
     def __repr__(self):
         return "<Deal '{}'>".format(self.id)
