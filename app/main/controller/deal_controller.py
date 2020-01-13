@@ -10,7 +10,7 @@ api = DealDto.api
 _deal = DealDto.deal
 parser = DealDto.parser
 
-@api.route("/<pet_id>")
+@api.route("/<public_id>")
 class PostDeal(Resource):
     @token_required
     @api.response(201, "Pet listed.")
