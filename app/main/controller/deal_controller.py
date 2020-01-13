@@ -83,3 +83,14 @@ class GetUserDealList(Resource):
         deals = get_user_deals(username=username)
 
         return deals
+
+@api.route("/all")
+@api.response(404, "deals not found")
+class GetAllPosts(Resource):
+    @token_required
+    @api.doc("get all deals")
+    @api.marshal_with(_deal, envelope='data')
+    def get(self):
+        deals = get_all_deals()
+
+        return deals

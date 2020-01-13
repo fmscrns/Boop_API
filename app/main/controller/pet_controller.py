@@ -99,3 +99,14 @@ class GetBreedPetList(Resource):
         pets = get_breed_pets(breed_id=breed_id)
 
         return pets
+
+@api.route("/all")
+@api.response(404, "pets not found")
+class GetAllPosts(Resource):
+    @token_required
+    @api.doc("get all pets")
+    @api.marshal_with(_pet, envelope='data')
+    def get(self):
+        pets = get_all_pets()
+
+        return pets

@@ -39,6 +39,7 @@ class PetDto:
         "profPic_filename" : fields.String(required=True, description="pet large profile picture"),
         "specie_name" : fields.String(required=True, description="pet specie"),
         "breed_name" : fields.String(required=True, description="pet breed"),
+        "pet_owner" : fields.String(required=True, decription="pet owner")
     })
 
     parser = api.parser()
@@ -90,7 +91,8 @@ class PostDto:
     post = api.model("post", {
         "post_id" : fields.String(require=True, description="post id"),
         "content" : fields.String(required=True, description="post contents"),
-        "posted_on" : fields.DateTime(required=True, description="date posted")
+        "posted_on" : fields.DateTime(dt_format="rfc822", required=True, description="date posted"),
+        "post_author" : fields.String(required=True, decription="post author")
     })
 
     parser = api.parser
@@ -103,7 +105,8 @@ class DealDto:
         "public_id" : fields.String(required=True, description="transaction id"),
         "price" : fields.Integer(required=True, description="pet price"),
         "for_sale" : fields.Boolean(required=True, description="pet for adoption"),
-        "posted_on" : fields.Boolean(required=True, description="transaction post date")
+        "posted_on" : fields.Boolean(dt_format="rfc822", required=True, description="transaction post date"),
+        "deal_owner" : fields.String(required=True, decription="deal owner")
 
     })
 
@@ -116,7 +119,8 @@ class CommentDto:
     comment = api.model("comment", {
         "public_id" : fields.String(required=True, description="comment id"),
         "comment" : fields.String(required=True, description="comment contents"),
-        "posted_on" : fields.Boolean(required=True, description="comment post date")
+        "posted_on" : fields.Boolean(required=True, description="comment post date"),
+        "posted_by" : fields.String(required=True, decription="comment by")
     })
 
     parser = api.parser

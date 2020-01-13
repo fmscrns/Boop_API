@@ -11,7 +11,7 @@ api = CommentDto.api
 _comm = CommentDto.comment
 parser = CommentDto.parser
 
-@api.route("/")
+@api.route("/<post_id>")
 class CreateComment(Resource):
     @token_required
     @api.response(201, "Comment added")

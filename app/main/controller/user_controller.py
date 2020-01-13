@@ -1,7 +1,7 @@
 from flask import request
 from flask_restplus import Resource
 from ..util.dto import UserDto
-from ..util.decorator import token_required
+from ..util.decorator import token_required, admin_token_required
 from ..services.user_service import *
 
 api = UserDto.api
@@ -27,6 +27,7 @@ class UserAuth(Resource):
         post_data = request.json
 
         return save_new_user(data=post_data)
+
 
 @api.route("/<username>")
 @api.param("username", "The User identifier")
@@ -78,3 +79,16 @@ class GetPetOwnerList(Resource):
         owners = get_pet_owners(public_id=public_id)
         
         return owners
+
+@api.route("/all")
+@api.response(404, "Users not found")
+class GetAllUsers(Resource):
+    @admin_token_required
+    @api.doc("get all users")
+    @api.marshal_with(_user, envelope="data")
+    def get(self):
+        users = get_all_users()
+
+        return users
+
+    

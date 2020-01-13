@@ -16,7 +16,8 @@ def new_deal(data, username, public_id):
         public_id = new_public_id,
         posted_on = datetime.datetime.utcnow(),
         price = data["price"],
-        for_sale = data["for_sale"]
+        for_sale = data["for_sale"],
+        deal_owner = seller.username
     )
 
     Helper.save_changes(new_deal)
@@ -35,7 +36,7 @@ def get_all_deals():
     return Deal.query.all()
 
 def get_a_deal(public_id):
-    deal = db.session.query(Deal.public_id, Deal.price, Deal.posted_on, Deal.for_sale).first()
+    deal = db.session.query(Deal.public_id, Deal.price, Deal.posted_on, Deal.for_sale, Deal.deal_owner).first()
     print(deal)
     deal_obj = {}
 
@@ -43,6 +44,7 @@ def get_a_deal(public_id):
     deal_obj["price"] = deal[1]
     deal_obj["posted_on"] = deal[2]
     deal_obj["for_sale"] = deal[3]
+    deal_obj["deal_owner"] = deal[4]
 
     return deal_obj
 
@@ -78,7 +80,7 @@ def update_deal(public_id, data):
 def get_user_deals(username):
     user_id = User.query.filter_by(username=username).first().public_id
 
-    deals = db.session.query(Deal.public_id, Deal.price, Deal.posted_on, Deal.for_sale, User.first_name, User.last_name).filter(User.public_id==user_id).filter(user_sale_rel.c.user_id==User.public_id).filter(user_sale_rel.c.public_id==Deal.public_id).all()
+    deals = db.session.query(Deal.public_id, Deal.price, Deal.posted_on, Deal.for_sale, Deal.deal_owner, User.first_name, User.last_name).filter(User.public_id==user_id).filter(user_sale_rel.c.user_id==User.public_id).filter(user_sale_rel.c.public_id==Deal.public_id).all()
 
     deal_list = []
 
@@ -89,6 +91,7 @@ def get_user_deals(username):
         deal_obj["price"] = deal[1]
         deal_obj["posted_on"] = deal[2]
         deal_obj["for_sale"] = deal[3]
+        deal_obj["deal_owner"] = deal[4]
 
         
         deal_list.append(deal_obj)

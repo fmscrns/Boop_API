@@ -11,7 +11,7 @@ class Post(db.Model):
     content = db.Column(db.String(300), nullable=False)
     # post_gallery = db.Column(db.String(50), nullable=True)
     posted_on = db.Column(db.DateTime, nullable=False)
-    # posted_by = db.Column(db.Integer, db.ForeignKey('user.id'))
+    post_author = db.Column(db.String, db.ForeignKey('user.username'))
 
     # pet_rel =  db.relationship("Pet", secondary=pet_post_rel, backref=db.backref("pet", lazy=True))
 

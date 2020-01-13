@@ -14,6 +14,7 @@ class Deal(db.Model):
     posted_on = db.Column(db.DateTime, nullable=False)
     price = db.Column(db.Integer, nullable=True)
     for_sale = db.Column(db.Boolean, nullable=False, default=False)
+    deal_owner = db.Column(db.String, db.ForeignKey('user.username'))
 
     pet_rel = db.relationship("Pet", secondary=pet_price_rel, backref=db.backref("pet", lazy=True))
     

@@ -76,3 +76,14 @@ class GetUserPostList(Resource):
         posts = get_user_posts(username=username)
 
         return posts
+
+@api.route("/all")
+@api.response(404, "posts not found")
+class GetAllPosts(Resource):
+    @token_required
+    @api.doc("get all posts")
+    @api.marshal_with(_post, envelope='data')
+    def get(self):
+        posts = get_all_posts()
+
+        return posts

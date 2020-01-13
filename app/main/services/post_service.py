@@ -14,7 +14,7 @@ def new_post(data, username):
         post_id = new_post_id,
         content = data["content"],
         posted_on = datetime.datetime.utcnow(),
-        # posted_by = author.id
+        post_author = author.username
     )
 
     Helper.save_changes(new_post)
@@ -29,13 +29,14 @@ def get_all_posts():
     return Post.query.all()
 
 def get_a_post(post_id):
-    post = db.session.query(Post.post_id, Post.content, Post.posted_on).first()
+    post = db.session.query(Post.post_id, Post.content, Post.posted_on, Post.post_author).first()
     print(post)
     post_obj = {}
 
     post_obj["post_id"] = post[0]
     post_obj["content"] = post[1]
     post_obj["posted_on"] = post[2]
+    post_obj["post_author"] = post[3]
 
     return post_obj
 
@@ -65,7 +66,7 @@ def update_post(post_id, data):
 def get_user_posts(username):
     user_id = User.query.filter_by(username=username).first().public_id
 
-    posts = db.session.query(Post.post_id, Post.content, Post.posted_on, User.first_name, User.last_name).filter(User.public_id==user_id).filter(user_post_rel.c.user_id==User.public_id).filter(user_post_rel.c.post_id==Post.post_id).all()
+    posts = db.session.query(Post.post_id, Post.content, Post.posted_on, Post.post_author, User.first_name, User.last_name).filter(User.public_id==user_id).filter(user_post_rel.c.user_id==User.public_id).filter(user_post_rel.c.post_id==Post.post_id).all()
 
     post_list = []
 
@@ -75,6 +76,7 @@ def get_user_posts(username):
         post_obj["post_id"] = post[0]
         post_obj["content"] = post[1]
         post_obj["posted_on"] = post[2]
+        post_obj["post_author"] = post[3]
         
         post_list.append(post_obj)
 

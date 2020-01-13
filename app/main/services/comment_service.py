@@ -15,7 +15,8 @@ def new_comment(data, username, post_id):
     new_comment = Comment(
         public_id = new_public_id,
         posted_on = datetime.datetime.utcnow(),
-        comment = data["comment"]
+        comment = data["comment"],
+        posted_by = commenter.username
     )
 
     Helper.save_changes(new_comment)
@@ -34,13 +35,14 @@ def get_all_comments():
     return Comment.query.all()
 
 def get_a_comment(public_id):
-    comment = db.session.query(Comment.public_id, Comment.posted_on, Comment.comment).first()
+    comment = db.session.query(Comment.public_id, Comment.posted_on, Comment.comment, Comment.posted_by).first()
     print(comment)
     comm_obj = {}
 
     comm_obj["public_id"] = comment[0]
     comm_obj["posted_on"] = comment[1]
     comm_obj["comment"] = comment[2]
+    comm_obj["posted_by"] = comment[3]
 
     return comm_obj
 
