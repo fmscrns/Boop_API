@@ -98,3 +98,11 @@ def get_user_deals(username):
 
     return deal_list
 
+
+# def adopt(username, public_id):
+#     deal = Deal.query.filter_by(public_id=public_id).first()
+
+#     user = User.query.filter_by(username=username).first()
+
+
+

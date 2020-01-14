@@ -16,7 +16,8 @@ def new_comment(data, username, post_id):
         public_id = new_public_id,
         posted_on = datetime.datetime.utcnow(),
         comment = data["comment"],
-        posted_by = commenter.username
+        posted_by = commenter.username,
+        commented_on = post.post_id
     )
 
     Helper.save_changes(new_comment)
@@ -35,7 +36,7 @@ def get_all_comments():
     return Comment.query.all()
 
 def get_a_comment(public_id):
-    comment = db.session.query(Comment.public_id, Comment.posted_on, Comment.comment, Comment.posted_by).first()
+    comment = db.session.query(Comment.public_id, Comment.posted_on, Comment.comment, Comment.posted_by, Comment.commented_on).first()
     print(comment)
     comm_obj = {}
 
@@ -43,6 +44,7 @@ def get_a_comment(public_id):
     comm_obj["posted_on"] = comment[1]
     comm_obj["comment"] = comment[2]
     comm_obj["posted_by"] = comment[3]
+    comm_obj["commented_on"] = comment[4]
 
     return comm_obj
 
@@ -74,3 +76,9 @@ def edit_comment(public_id, data):
         return Helper.return_resp_obj("fail", "No comment found.", None, 409)
 
 
+def get_post_rel_comment(post_id):
+    post = Post.query.filter_by(post_id=post_id).first()
+
+    comments = comment_post_rel.query.filter_by(post_id=post.post_id)
+
+    return comments

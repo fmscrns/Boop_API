@@ -47,6 +47,7 @@ def delete_user(username):
 
 def update_user(username, data):
     user = User.query.filter_by(username=username).first()
+    print(user)
     
     if user:
         if User.query.filter_by(email=data["email"]).count() == 0 or User.query.filter_by(email=data["email"]).count() == 1 and user.email == data["email"]:
@@ -55,6 +56,7 @@ def update_user(username, data):
             user.email = data["email"]
             user.username = data["username"]
             user.contact_no = data["contactNo"]
+            user.password = data["password"]
 
             db.session.commit()
 

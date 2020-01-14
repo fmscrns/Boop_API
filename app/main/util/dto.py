@@ -103,7 +103,7 @@ class DealDto:
 
     deal = api.model("deal", {
         "public_id" : fields.String(required=True, description="transaction id"),
-        "price" : fields.Integer(required=True, description="pet price"),
+        "price" : fields.Fixed(decimals=2, required=True, description="pet price"),
         "for_sale" : fields.Boolean(required=True, description="pet for adoption"),
         "posted_on" : fields.Boolean(dt_format="rfc822", required=True, description="transaction post date"),
         "deal_owner" : fields.String(required=True, decription="deal owner")
@@ -120,7 +120,8 @@ class CommentDto:
         "public_id" : fields.String(required=True, description="comment id"),
         "comment" : fields.String(required=True, description="comment contents"),
         "posted_on" : fields.Boolean(required=True, description="comment post date"),
-        "posted_by" : fields.String(required=True, decription="comment by")
+        "posted_by" : fields.String(required=True, decription="comment by"),
+        "posted_on" : fields.String(required=True, decription="commented on")
     })
 
     parser = api.parser

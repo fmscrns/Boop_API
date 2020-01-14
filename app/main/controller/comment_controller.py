@@ -69,3 +69,32 @@ class PostOperations(Resource):
         
         else:
             return comment
+
+
+@api.route("/<post_id>")
+@api.param("post_id", "post identifier")
+@api.response(404, "Post not found.")
+class GetPostRelatedComments(Resource):
+    @token_required
+    @api.doc("get post related comments")
+    @api.marshal_with(_comm)
+    def get(self, post_id):
+        comment = get_post_rel_comment(post_id)
+
+        if not comment:
+            api.abort(404)
+
+        else:
+            return comment
+
+
+@api.route("/all")
+@api.response(404, "comments not found")
+class GetAllPosts(Resource):
+    @token_required
+    @api.doc("get all comments")
+    @api.marshal_with(_comm, envelope='data')
+    def get(self):
+        comments = get_all_comments()
+
+        return comments
