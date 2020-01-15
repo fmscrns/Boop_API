@@ -119,9 +119,9 @@ class CommentDto:
     comment = api.model("comment", {
         "public_id" : fields.String(required=True, description="comment id"),
         "comment" : fields.String(required=True, description="comment contents"),
-        "posted_on" : fields.Boolean(required=True, description="comment post date"),
+        "posted_on" : fields.DateTime(required=True, description="comment post date"),
         "posted_by" : fields.String(required=True, decription="comment by"),
-        "posted_on" : fields.String(required=True, decription="commented on")
+        "post_id" : fields.String(required=True, decription="commented on")
     })
 
     parser = api.parser
