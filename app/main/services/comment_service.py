@@ -79,6 +79,6 @@ def edit_comment(public_id, data):
 def get_post_rel_comment(post_id):
     post = Post.query.filter_by(post_id=post_id).first()
 
-    comments = comment_post_rel.query.filter_by(post_id=post.post_id)
+    comments = Comment.query.filter_by(post_id=post.post_id).first
 
     return comments

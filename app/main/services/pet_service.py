@@ -149,3 +149,18 @@ def get_breed_pets(breed_id):
         pet_list.append(pet_obj)
 
     return pet_list
+
+def pet_transfer(public_id, new_owner_id):
+    pet = Pet.query.filter_by(public_id=public_id).first()
+
+    new_owner = User.query.filter_by(new_owner_id=public_id).first()
+
+    if pet:
+        pet.pet_owner = new_owner.public_id
+
+        db.session.commit()
+
+        return Helper.return_resp_obj("success", "Pet succesfully transferred", None, 200)
+
+    else:
+        return Helper.return_resp_obj("fail", "No pet found.", None, 409)
