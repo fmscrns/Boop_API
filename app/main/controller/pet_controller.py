@@ -111,11 +111,12 @@ class GetAllPosts(Resource):
 
         return pets
 
-@api.route("<public_id>/transfer/<new_owner_id>")
-@api.response(404, "Update pet owner")
-@token_required
-def post(public_id, new_owner_id):
-    pet = pet_transfer(public_id=public_id, new_owner_id=new_owner_id)
+# @api.route("<public_id>/transfer")
+# @api.response(404, "Update pet owner")
+# @token_required
+# class PetTransfer(Resource):
+#     def put(self, public_id, new_owner_id):
+#         pet = pet_transfer(public_id=public_id, new_owner_id=new_owner_id)
 
-    return pet
+#         return pet
 

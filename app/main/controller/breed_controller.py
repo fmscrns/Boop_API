@@ -10,12 +10,12 @@ api = BreedDto.api
 _breed = BreedDto.breed
 parser = BreedDto.parser
 
-@api.route("/<public_id>")
+@api.route("/")
 @api.response(404, "Breed not found")
 class NewBreed(Resource):
     @admin_token_required
     @api.response(201, "Breed added")
-    @api.doc("add breed")
+    @api.doc("add breed", parser=parser)
     def post(self, public_id):
         specie = get_a_specie(public_id)
 

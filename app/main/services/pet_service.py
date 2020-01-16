@@ -87,7 +87,7 @@ def update_pet(public_id, data):
 def get_user_pets(username):
     user_id = User.query.filter_by(username=username).first().public_id
 
-    pets = db.session.query(Pet.public_id, Pet.pet_name, Pet.bio, Pet.birthday, Pet.sex, Pet.profPic_filename, Pet.pet_owner, User.first_name, User.last_name, Specie.specie_name, Breed.breed_name).filter(User.public_id==user_id).filter(user_pet_rel.c.user_id==User.public_id).filter(user_pet_rel.c.pet_id==Pet.public_id).filter(pet_kind_rel.c.pet_id==user_pet_rel.c.pet_id).filter(pet_kind_rel.c.specie_id==Specie.public_id).filter(pet_kind_rel.c.breed_id==Breed.public_id).filter(Breed.specie_id==Specie.public_id).all()
+    pets = db.session.query(Pet.public_id, Pet.pet_name, Pet.bio, Pet.birthday, Pet.sex, Pet.profPic_filename, Pet.pet_owner, Specie.specie_name, Breed.breed_name).filter(User.public_id==user_id).filter(user_pet_rel.c.user_id==User.public_id).filter(user_pet_rel.c.pet_id==Pet.public_id).filter(pet_kind_rel.c.pet_id==user_pet_rel.c.pet_id).filter(pet_kind_rel.c.specie_id==Specie.public_id).filter(pet_kind_rel.c.breed_id==Breed.public_id).filter(Breed.specie_id==Specie.public_id).all()
 
     pet_list = []
 
@@ -100,11 +100,9 @@ def get_user_pets(username):
         pet_obj["birthday"] = pet[3]
         pet_obj["sex"] = pet[4]
         pet_obj["profPic_filename"] = pet[5]
-        pet_obj["owner_firstName"] = pet[6]
-        pet_obj["owner_lastName"] = pet[7]
-        pet_obj["specie_name"] = pet[8]
-        pet_obj["breed_name"] = pet[9]
-        pet_obj["pet_owner"] = pet[10]
+        pet_obj["pet_owner"] = pet[6]
+        pet_obj["specie_name"] = pet[7]
+        pet_obj["breed_name"] = pet[8]
 
         pet_list.append(pet_obj)
 
