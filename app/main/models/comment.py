@@ -15,7 +15,7 @@ class Comment(db.Model):
     # post_gallery = db.Column(db.String(50), nullable=True)
     posted_on = db.Column(db.DateTime, nullable=False)
     posted_by = db.Column(db.String, db.ForeignKey('user.username'))
-    commented_on = db.Column(db.String, db.ForeignKey('post.post_id'))
+    post_id = db.Column(db.String, db.ForeignKey('post.post_id'))
 
     post_rel = db.relationship("Post", secondary=comment_post_rel, backref=db.backref("post", lazy=True))
 

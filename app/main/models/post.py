@@ -1,5 +1,5 @@
 from .. import db
-from app.main.models import pet, user
+from app.main.models import pet, user, comment
 # from app.main.services.user_service import get_logged_in_user
 
 
@@ -12,6 +12,8 @@ class Post(db.Model):
     # post_gallery = db.Column(db.String(50), nullable=True)
     posted_on = db.Column(db.DateTime, nullable=False)
     post_author = db.Column(db.String, db.ForeignKey('user.username'))
+    
+    comments = db.relationship('Comment', backref='post')
 
     # pet_rel =  db.relationship("Pet", secondary=pet_post_rel, backref=db.backref("pet", lazy=True))
 
