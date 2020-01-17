@@ -87,7 +87,15 @@ def update_pet(public_id, data):
 def get_user_pets(username):
     user_id = User.query.filter_by(username=username).first().public_id
 
-    pets = db.session.query(Pet.public_id, Pet.pet_name, Pet.bio, Pet.birthday, Pet.sex, Pet.profPic_filename, Pet.pet_owner, Specie.specie_name, Breed.breed_name).filter(User.public_id==user_id).filter(user_pet_rel.c.user_id==User.public_id).filter(user_pet_rel.c.pet_id==Pet.public_id).filter(pet_kind_rel.c.pet_id==user_pet_rel.c.pet_id).filter(pet_kind_rel.c.specie_id==Specie.public_id).filter(pet_kind_rel.c.breed_id==Breed.public_id).filter(Breed.specie_id==Specie.public_id).all()
+    pets = db.session.query(Pet.public_id, 
+                            Pet.pet_name, 
+                            Pet.bio, 
+                            Pet.birthday, 
+                            Pet.sex, 
+                            Pet.profPic_filename, 
+                            Pet.pet_owner, 
+                            Specie.specie_name, 
+                            Breed.breed_name).filter(User.public_id==user_id).filter(user_pet_rel.c.user_id==User.public_id).filter(user_pet_rel.c.pet_id==Pet.public_id).filter(pet_kind_rel.c.pet_id==user_pet_rel.c.pet_id).filter(pet_kind_rel.c.specie_id==Specie.public_id).filter(pet_kind_rel.c.breed_id==Breed.public_id).filter(Breed.specie_id==Specie.public_id).all()
 
     pet_list = []
 
@@ -109,7 +117,13 @@ def get_user_pets(username):
     return pet_list
 
 def get_specie_pets(specie_id):
-    pets = db.session.query(Pet.pet_name, Pet.public_id, Pet.sex, Pet.pet_owner, Specie.specie_name, Breed.breed_name, Pet.profPic_filename).filter(Pet.public_id==pet_kind_rel.c.pet_id).filter(pet_kind_rel.c.specie_id==Specie.public_id).filter(pet_kind_rel.c.breed_id==Breed.public_id).filter(pet_kind_rel.c.specie_id==specie_id).all()
+    pets = db.session.query(Pet.pet_name, 
+                            Pet.public_id, 
+                            Pet.sex, 
+                            Pet.pet_owner, 
+                            Specie.specie_name, 
+                            Breed.breed_name, 
+                            Pet.profPic_filename).filter(Pet.public_id==pet_kind_rel.c.pet_id).filter(pet_kind_rel.c.specie_id==Specie.public_id).filter(pet_kind_rel.c.breed_id==Breed.public_id).filter(pet_kind_rel.c.specie_id==specie_id).all()
     
     pet_list = []
     
@@ -119,17 +133,23 @@ def get_specie_pets(specie_id):
         pet_obj["pet_name"] = pet[0]
         pet_obj["public_id"] = pet[1]
         pet_obj["sex"] = pet[2]
-        pet_obj["specie_name"] = pet[3]
-        pet_obj["breed_name"] = pet[4]
-        pet_obj["profPic_filename"] = pet[5]
-        pet_obj["pet_owner"] = pet[6]
-
+        pet_obj["pet_owner"] = pet[3]
+        pet_obj["specie_name"] = pet[4]
+        pet_obj["breed_name"] = pet[5]
+        pet_obj["profPic_filename"] = pet[6]
+        
         pet_list.append(pet_obj)
 
     return pet_list
 
 def get_breed_pets(breed_id):
-    pets = db.session.query(Pet.pet_name, Pet.public_id, Pet.sex, Pet.pet_owner, Specie.specie_name, Breed.breed_name, Pet.profPic_filename).filter(Pet.public_id==pet_kind_rel.c.pet_id).filter(pet_kind_rel.c.specie_id==Specie.public_id).filter(pet_kind_rel.c.breed_id==Breed.public_id).filter(pet_kind_rel.c.breed_id==breed_id).all()
+    pets = db.session.query(Pet.pet_name, 
+                            Pet.public_id, 
+                            Pet.sex, 
+                            Pet.pet_owner, 
+                            Specie.specie_name, 
+                            Breed.breed_name, 
+                            Pet.profPic_filename).filter(Pet.public_id==pet_kind_rel.c.pet_id).filter(pet_kind_rel.c.specie_id==Specie.public_id).filter(pet_kind_rel.c.breed_id==Breed.public_id).filter(pet_kind_rel.c.breed_id==breed_id).all()
     
     pet_list = []
     
@@ -139,10 +159,10 @@ def get_breed_pets(breed_id):
         pet_obj["pet_name"] = pet[0]
         pet_obj["public_id"] = pet[1]
         pet_obj["sex"] = pet[2]
-        pet_obj["specie_name"] = pet[3]
-        pet_obj["breed_name"] = pet[4]
-        pet_obj["profPic_filename"] = pet[5]
-        pet_obj["pet_owner"] = pet[6]
+        pet_obj["pet_owner"] = pet[3]
+        pet_obj["specie_name"] = pet[4]
+        pet_obj["breed_name"] = pet[5]
+        pet_obj["profPic_filename"] = pet[6]
 
         pet_list.append(pet_obj)
 

@@ -20,7 +20,7 @@ class NewSpecie(Resource):
 
 @api.route("/all")
 class SpecieList(Resource):
-    @admin_token_required
+    @token_required
     @api.doc("show list of all registered species")
     @api.marshal_list_with(_specie, envelope="data")
     def get(self):

@@ -13,7 +13,6 @@ class Post(db.Model):
     posted_on = db.Column(db.DateTime, nullable=False)
     post_author = db.Column(db.String, db.ForeignKey('user.username'))
     
-    comments = db.relationship('Comment', backref='post')
 
     # pet_rel =  db.relationship("Pet", secondary=pet_post_rel, backref=db.backref("pet", lazy=True))
 

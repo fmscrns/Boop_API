@@ -67,7 +67,7 @@ class BreedOperations(Resource):
 @api.param("specie_id", "Breeds with specific specie")
 @api.response(404, "Breeds not found.")
 class SpecieBreeds(Resource):
-    @admin_token_required
+    @token_required
     @api.doc("get breeds with specific specie")
     @api.marshal_list_with(_breed, envelope="data")
     def get(self, specie_id):
