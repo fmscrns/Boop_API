@@ -23,7 +23,7 @@ user_post_rel = db.Table("user_post_rel",
 
 user_sale_rel = db.Table("pet_sale_rel",
     db.Column("user_id", db.String, db.ForeignKey("user.public_id", ondelete="cascade")),
-    db.Column("trans_id", db.String, db.ForeignKey("deal.public_id", ondelete="cascade")),
+    db.Column("deal_id", db.String, db.ForeignKey("deal.public_id", ondelete="cascade")),
 )
 
 user_comment_rel = db.Table("user_comment_rel",

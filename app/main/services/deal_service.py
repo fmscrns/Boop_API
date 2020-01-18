@@ -10,7 +10,7 @@ def new_deal(data, username, public_id):
     new_public_id = str(uuid.uuid4())
 
     seller = User.query.filter_by(username=username).first()
-    pet = Pet.qurey.filter_by(public_id=public_id).first()
+    pet = Pet.query.filter_by(public_id=public_id).first()
 
     new_deal = Deal(
         public_id = new_public_id,
@@ -22,9 +22,9 @@ def new_deal(data, username, public_id):
 
     Helper.save_changes(new_deal)
 
-    statement_one = user_sale_rel.insert().values(user_id=seller.public_id, trans_id=new_public_id)
+    statement_one = user_sale_rel.insert().values(user_id=seller.public_id, deal_id=new_public_id)
 
-    statement_two = pet_price_rel.insert().values(pet_id=pet.public_id, trans_id=new_public_id)
+    statement_two = pet_price_rel.insert().values(pet_id=pet.public_id, deal_id=new_public_id)
 
     Helper.execute_changes(statement_one)
 

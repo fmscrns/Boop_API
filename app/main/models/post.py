@@ -11,10 +11,6 @@ class Post(db.Model):
     content = db.Column(db.String(300), nullable=False)
     posted_on = db.Column(db.DateTime, nullable=False)
     post_author = db.Column(db.String, db.ForeignKey('user.username', ondelete="cascade"))
-    
-
-    # pet_rel =  db.relationship("Pet", secondary=pet_post_rel, backref=db.backref("pet", lazy=True))
-
 
     def __repr__(self):
         return "<post '{}'>".format(self.public_id)
