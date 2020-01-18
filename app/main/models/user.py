@@ -18,7 +18,7 @@ user_circle_rel = db.Table("user_circle_rel",
 
 user_post_rel = db.Table("user_post_rel",
     db.Column("user_id", db.String, db.ForeignKey("user.public_id")),
-    db.Column("post_id", db.String, db.ForeignKey("post.post_id"))
+    db.Column("public_id", db.String, db.ForeignKey("post.public_id"))
 )
 
 user_sale_rel = db.Table("pet_sale_rel",

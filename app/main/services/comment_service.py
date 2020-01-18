@@ -6,25 +6,25 @@ from app.main.models.post import Post
 from app.main.models.comment import Comment, comment_post_rel
 from app.main.services.help import Helper
 
-def new_comment(data, username, post_id):
+def new_comment(data, username, public_id):
     new_public_id = str(uuid.uuid4())
 
     commenter = User.query.filter_by(username=username).first()
-    post = Post.query.filter_by(post_id=post_id).first()
+    post = Post.query.filter_by(public_id=public_id).first()
 
     new_comment = Comment(
         public_id = new_public_id,
         posted_on = datetime.datetime.utcnow(),
         comment = data["comment"],
         posted_by = commenter.username,
-        post_id = post.post_id
+        post_id = post.public_id
     )
 
     Helper.save_changes(new_comment)
 
     statement_one = user_comment_rel.insert().values(user_id=commenter.public_id, comm_id=new_public_id)
 
-    statement_two = comment_post_rel.insert().values(post_id=post.post_id, comm_id=new_public_id)
+    statement_two = comment_post_rel.insert().values(post_id=post.public_id, comm_id=new_public_id)
 
     Helper.execute_changes(statement_one)
 
@@ -76,9 +76,9 @@ def edit_comment(public_id, data):
         return Helper.return_resp_obj("fail", "No comment found.", None, 409)
 
 
-def get_post_rel_comment(post_id):
-    post = Post.query.filter_by(post_id=post_id).first()
+def get_post_rel_comment(public_id):
+    post = Post.query.filter_by(public_id=public_id).first()
 
-    comments = Comment.query.filter_by(post_id=post.post_id).first
+    comments = Comment.query.filter_by(post_id=post.public_id).first
 
     return comments

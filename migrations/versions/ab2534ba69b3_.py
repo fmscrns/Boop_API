@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 6b6828c3e579
+Revision ID: ab2534ba69b3
 Revises: 
-Create Date: 2020-01-17 15:00:20.768373
+Create Date: 2020-01-18 12:50:54.577015
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '6b6828c3e579'
+revision = 'ab2534ba69b3'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -105,13 +105,13 @@ def upgrade():
     )
     op.create_table('post',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
-    sa.Column('post_id', sa.String(length=100), nullable=True),
+    sa.Column('public_id', sa.String(length=100), nullable=True),
     sa.Column('content', sa.String(length=300), nullable=False),
     sa.Column('posted_on', sa.DateTime(), nullable=False),
     sa.Column('post_author', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['post_author'], ['user.username'], ),
     sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('post_id')
+    sa.UniqueConstraint('public_id')
     )
     op.create_table('user_business_rel',
     sa.Column('user_id', sa.String(), nullable=True),
@@ -132,7 +132,7 @@ def upgrade():
     sa.Column('posted_on', sa.DateTime(), nullable=False),
     sa.Column('posted_by', sa.String(), nullable=True),
     sa.Column('post_id', sa.String(), nullable=True),
-    sa.ForeignKeyConstraint(['post_id'], ['post.post_id'], ),
+    sa.ForeignKeyConstraint(['post_id'], ['post.public_id'], ),
     sa.ForeignKeyConstraint(['posted_by'], ['user.username'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('public_id')
@@ -165,15 +165,15 @@ def upgrade():
     )
     op.create_table('user_post_rel',
     sa.Column('user_id', sa.String(), nullable=True),
-    sa.Column('post_id', sa.String(), nullable=True),
-    sa.ForeignKeyConstraint(['post_id'], ['post.post_id'], ),
+    sa.Column('public_id', sa.String(), nullable=True),
+    sa.ForeignKeyConstraint(['public_id'], ['post.public_id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['user.public_id'], )
     )
     op.create_table('comment_post_rel',
     sa.Column('post_id', sa.String(), nullable=True),
     sa.Column('comm_id', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['comm_id'], ['comment.public_id'], ),
-    sa.ForeignKeyConstraint(['post_id'], ['post.post_id'], )
+    sa.ForeignKeyConstraint(['post_id'], ['post.public_id'], )
     )
     op.create_table('user_comment_rel',
     sa.Column('user_id', sa.String(), nullable=True),

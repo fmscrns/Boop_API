@@ -2,7 +2,7 @@ from .. import db
 from app.main.models import user, post
 
 comment_post_rel = db.Table("comment_post_rel",
-    db.Column("post_id", db.String, db.ForeignKey("post.post_id")),
+    db.Column("post_id", db.String, db.ForeignKey("post.public_id")),
     db.Column("comm_id", db.String, db.ForeignKey("comment.public_id"))
 )
 
@@ -15,7 +15,7 @@ class Comment(db.Model):
     # post_gallery = db.Column(db.String(50), nullable=True)
     posted_on = db.Column(db.DateTime, nullable=False)
     posted_by = db.Column(db.String, db.ForeignKey('user.username'))
-    post_id = db.Column(db.String, db.ForeignKey('post.post_id'))
+    post_id = db.Column(db.String, db.ForeignKey('post.public_id'))
 
     post_rel = db.relationship("Post", secondary=comment_post_rel, backref=db.backref("post", lazy=True))
 
