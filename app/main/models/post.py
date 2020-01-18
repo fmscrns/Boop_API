@@ -10,7 +10,7 @@ class Post(db.Model):
     public_id = db.Column(db.String(100), unique=True)
     content = db.Column(db.String(300), nullable=False)
     posted_on = db.Column(db.DateTime, nullable=False)
-    post_author = db.Column(db.String, db.ForeignKey('user.username'))
+    post_author = db.Column(db.String, db.ForeignKey('user.username', ondelete="cascade"))
     
 
     # pet_rel =  db.relationship("Pet", secondary=pet_post_rel, backref=db.backref("pet", lazy=True))
