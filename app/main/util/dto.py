@@ -127,16 +127,15 @@ class CommentDto:
 
     parser = api.parser
 
-class TransactionDto:
-    api = Namespace("transactions", description="transaction operations")
+class RequestDto:
+    api = Namespace("request", description="pet deals operations")
 
-    trans = api.model("transcation",{
+    request = api.model("request", {
         "public_id" : fields.String(required=True, decription="commented on"),
-        "posted_on" : fields.DateTime(required=True, description="transaction date"),
+        "req_date" : fields.DateTime(required=True, description="transaction date"),
         "status" : fields.String(required=True, decription="request status"),
-        "req_id" : fields.String(required=True, decription="requester id"),
         "deal_id" : fields.String(required=True, decription="deal id"),
-        "owner_id" : fields.String(required=True, decription="deal owner id"),
+        "requester_id" : fields.String(required=True, decription="request owner id"),
     })
 
     parser = api.parser

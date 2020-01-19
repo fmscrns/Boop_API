@@ -1,10 +1,11 @@
 from .. import db
-from app.main.models import pet, user
+from app.main.models import pet, user, request
 
 pet_price_rel = db.Table("pet_price_rel",
     db.Column("pet_id", db.String, db.ForeignKey("pet.public_id", ondelete="cascade")),
     db.Column("deal_id", db.String, db.ForeignKey("deal.public_id", ondelete="cascade"))
 )
+
 
 class Deal(db.Model):
     __tablename__ = "deal"
@@ -16,6 +17,7 @@ class Deal(db.Model):
     status = db.Column(db.String(15), nullable=False, default="adopt")
     deal_owner = db.Column(db.String, db.ForeignKey('user.username', ondelete="cascade"))
     pet_id = db.Column(db.String, db.ForeignKey('pet.public_id', ondelete="cascade"))
+    req_id = db.Column(db.String, db.ForeignKey('request.public_id', ondelete="cascade"))
 
     pet_rel = db.relationship("Pet", secondary=pet_price_rel, backref=db.backref("pet", lazy=True), cascade="all, delete", passive_deletes=True)
     
