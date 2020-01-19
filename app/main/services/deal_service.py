@@ -78,9 +78,10 @@ def update_deal(public_id, data):
 
 
 def get_user_deals(username):
-    user_id = User.query.filter_by(username=username).first().public_id
+    user_id = User.query.filter_by(username=username).first()
+    print(user_id)
 
-    deals = db.session.query(Deal.public_id, Deal.price, Deal.posted_on, Deal.status, Deal.deal_owner, User.username).filter(User.public_id==user_id).filter(user_sale_rel.c.user_id==User.public_id).filter(user_sale_rel.c.public_id==Deal.public_id).all()
+    deals = db.session.query(Deal.public_id, Deal.price, Deal.posted_on, Deal.status, Deal.deal_owner, User.username).filter(Deal.deal_owner==user_id.username).filter(user_sale_rel.c.user_id==User.public_id).filter(user_sale_rel.c.deal_id==Deal.public_id).all()
 
     deal_list = []
 

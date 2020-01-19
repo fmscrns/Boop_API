@@ -36,7 +36,7 @@ def get_all_comments():
     return Comment.query.all()
 
 def get_a_comment(public_id):
-    comment = db.session.query(Comment.public_id, Comment.posted_on, Comment.comment, Comment.posted_by, Comment.post_id).first()
+    comment = db.session.query(Comment.public_id, Comment.posted_on, Comment.comment, Comment.posted_by, Comment.post_id).filter(Comment.public_id==public_id).first()
     print(comment)
     comm_obj = {}
 

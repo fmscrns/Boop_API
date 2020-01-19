@@ -104,8 +104,8 @@ class DealDto:
     deal = api.model("deal", {
         "public_id" : fields.String(required=True, description="transaction id"),
         "price" : fields.Fixed(decimals=2, required=True, description="pet price"),
-        "for_sale" : fields.Boolean(required=True, description="pet for adoption"),
-        "posted_on" : fields.Boolean(dt_format="rfc822", required=True, description="transaction post date"),
+        "status" : fields.String(required=True, description="pet for adoption"),
+        "posted_on" : fields.DateTime(dt_format="rfc822", required=True, description="transaction post date"),
         "deal_owner" : fields.String(required=True, decription="deal owner")
 
     })
