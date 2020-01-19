@@ -47,7 +47,6 @@ def delete_user(username):
 
 def update_user(username, data):
     user = User.query.filter_by(username=username).first()
-    print(user)
     
     if user:
         if User.query.filter_by(email=data["email"]).count() == 0 or User.query.filter_by(email=data["email"]).count() == 1 and user.email == data["email"]:
@@ -103,7 +102,8 @@ def get_logged_in_user(new_request):
                     "username" : user.username,
                     "contactNo" : user.contact_no,
                     "admin" : user.admin,
-                    "registeredOn" : str(user.registered_on)
+                    "registeredOn" : str(user.registered_on),
+                    "public_id" : user.public_id
                 }
             }
 

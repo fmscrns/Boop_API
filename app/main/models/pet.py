@@ -18,7 +18,7 @@ class Pet(db.Model):
     sex = db.Column(db.String(100), nullable=False)
     profPic_filename = db.Column(db.String(50), nullable=False, default="pet-default-profPic.jpg")
     registered_on = db.Column(db.DateTime, nullable=False)
-    pet_owner = db.Column(db.String, db.ForeignKey('user.username', ondelete="cascade"))
+    pet_owner = db.Column(db.String, db.ForeignKey('user.public_id', ondelete="cascade"))
 
     specie_rel = db.relationship("Specie", secondary=pet_kind_rel, backref=db.backref("pet", lazy=True), cascade="all, delete", passive_deletes=True)
 

@@ -10,7 +10,7 @@ api = BreedDto.api
 _breed = BreedDto.breed
 parser = BreedDto.parser
 
-@api.route("/")
+@api.route("/<public_id>")
 @api.response(404, "Breed not found")
 class NewBreed(Resource):
     @admin_token_required
@@ -78,3 +78,15 @@ class SpecieBreeds(Resource):
 
         else:
             return breeds
+
+
+@api.route("/all")
+@api.response(404, "pets not found")
+class GetAllPosts(Resource):
+    @admin_token_required
+    @api.doc("get all pets")
+    @api.marshal_with(_breed, envelope='data')
+    def get(self):
+        pets = get_all_breeds()
+
+        return pets

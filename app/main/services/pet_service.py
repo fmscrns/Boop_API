@@ -6,10 +6,10 @@ from app.main.models.specie import Specie
 from app.main.models.breed import Breed
 from app.main.services.help import Helper
 
-def save_new_pet(data, username):
+def save_new_pet(data, public_id):
     new_public_id = str(uuid.uuid4())
 
-    owner = User.query.filter_by(username=username).first()
+    owner = User.query.filter_by(public_id=public_id).first()
     
     new_pet = Pet(
         public_id = new_public_id,
@@ -19,7 +19,7 @@ def save_new_pet(data, username):
         sex = data["sex"],
         profPic_filename = data["profPicFilename"],
         registered_on = datetime.datetime.utcnow(),
-        pet_owner = owner.username
+        pet_owner = owner.public_id
     )
 
     Helper.save_changes(new_pet)
@@ -149,7 +149,11 @@ def get_breed_pets(breed_id):
                             Pet.pet_owner, 
                             Specie.specie_name, 
                             Breed.breed_name, 
-                            Pet.profPic_filename).filter(Pet.public_id==pet_kind_rel.c.pet_id).filter(pet_kind_rel.c.specie_id==Specie.public_id).filter(pet_kind_rel.c.breed_id==Breed.public_id).filter(pet_kind_rel.c.breed_id==breed_id).all()
+                            Pet.profPic_filename).filter(
+                                Pet.public_id==pet_kind_rel.c.pet_id).filter(
+                                    pet_kind_rel.c.specie_id==Specie.public_id).filter(
+                                        pet_kind_rel.c.breed_id==Breed.public_id).filter(
+                                            pet_kind_rel.c.breed_id==breed_id).all()
     
     pet_list = []
     
@@ -171,12 +175,17 @@ def get_breed_pets(breed_id):
 def pet_transfer(public_id, new_owner_id):
     pet = Pet.query.filter_by(public_id=public_id).first()
 
-    new_owner = User.query.filter_by(new_owner_id=public_id).first()
+    new_owner = User.query.filter_by(public_id=new_owner_id).first()
+    print(new_owner.public_id)
 
     if pet:
         pet.pet_owner = new_owner.public_id
 
         db.session.commit()
+
+        statement_one = user_pet_rel.update().values(user_id=new_owner.public_id, pet_id=pet.public_id)
+
+        Helper.execute_changes(statement_one)
 
         return Helper.return_resp_obj("success", "Pet succesfully transferred", None, 200)
 

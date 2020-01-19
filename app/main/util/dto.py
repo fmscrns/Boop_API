@@ -104,9 +104,10 @@ class DealDto:
     deal = api.model("deal", {
         "public_id" : fields.String(required=True, description="transaction id"),
         "price" : fields.Fixed(decimals=2, required=True, description="pet price"),
-        "for_sale" : fields.Boolean(required=True, description="pet for adoption"),
-        "posted_on" : fields.Boolean(dt_format="rfc822", required=True, description="transaction post date"),
-        "deal_owner" : fields.String(required=True, decription="deal owner")
+        "status" : fields.String(required=True, description="pet for adoption"),
+        "posted_on" : fields.DateTime(dt_format="rfc822", required=True, description="transaction post date"),
+        "deal_owner" : fields.String(required=True, decription="deal owner"),
+        "pet_id" : fields.String(required=True, decription="pet in question"),
 
     })
 
@@ -122,6 +123,19 @@ class CommentDto:
         "posted_on" : fields.DateTime(required=True, description="comment post date"),
         "posted_by" : fields.String(required=True, decription="comment by"),
         "post_id" : fields.String(required=True, decription="commented on")
+    })
+
+    parser = api.parser
+
+class RequestDto:
+    api = Namespace("request", description="pet deals operations")
+
+    request = api.model("request", {
+        "public_id" : fields.String(required=True, decription="commented on"),
+        "req_date" : fields.DateTime(required=True, description="transaction date"),
+        "status" : fields.String(required=True, decription="request status"),
+        "deal_id" : fields.String(required=True, decription="deal id"),
+        "requester_id" : fields.String(required=True, decription="request owner id"),
     })
 
     parser = api.parser
