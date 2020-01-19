@@ -101,6 +101,3 @@ def get_user_deals(username):
         deal_list.append(deal_obj)
 
     return deal_list
-
-
-

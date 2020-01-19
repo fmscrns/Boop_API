@@ -102,7 +102,8 @@ def get_logged_in_user(new_request):
                     "username" : user.username,
                     "contactNo" : user.contact_no,
                     "admin" : user.admin,
-                    "registeredOn" : str(user.registered_on)
+                    "registeredOn" : str(user.registered_on),
+                    "public_id" : user.public_id
                 }
             }
 

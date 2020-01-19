@@ -2,6 +2,7 @@ from flask import request
 from flask_restplus import Resource
 from ..util.dto import PetDto
 from ..util.decorator import token_required, admin_token_required
+from ..models.user import User
 from ..services.user_service import get_logged_in_user
 from ..services.pet_service import *
 from ..services.help import Helper
@@ -20,9 +21,9 @@ class PostPet(Resource):
 
         user = get_logged_in_user(request)
         
-        user_username = user[0]["data"]["username"]
+        user_id = user[0]["data"]["public_id"]
         
-        return save_new_pet(data=post_data, username=user_username)
+        return save_new_pet(data=post_data, public_id=user_id)
 
 @api.route("/<public_id>")
 @api.param("public_id", "The Pet identifier")
@@ -111,12 +112,16 @@ class GetAllPosts(Resource):
 
         return pets
 
-# @api.route("<public_id>/transfer")
-# @api.response(404, "Update pet owner")
-# @token_required
-# class PetTransfer(Resource):
-#     def put(self, public_id, new_owner_id):
-#         pet = pet_transfer(public_id=public_id, new_owner_id=new_owner_id)
 
-#         return pet
+@api.route("/<public_id>/transfer/<user_id>")
+@api.response(404, "Update pet owner")
+class PetTransfer(Resource):
+    @token_required
+    def put(self, public_id, user_id):
+
+        user = User.query.filter_by(public_id=user_id).first()
+
+        pet = pet_transfer(public_id=public_id, new_owner_id=user.public_id)
+
+        return pet
 

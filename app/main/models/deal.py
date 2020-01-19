@@ -1,5 +1,5 @@
 from .. import db
-from app.main.models import pet
+from app.main.models import pet, user
 
 pet_price_rel = db.Table("pet_price_rel",
     db.Column("pet_id", db.String, db.ForeignKey("pet.public_id", ondelete="cascade")),
