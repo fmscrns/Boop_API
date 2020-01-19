@@ -106,7 +106,8 @@ class DealDto:
         "price" : fields.Fixed(decimals=2, required=True, description="pet price"),
         "status" : fields.String(required=True, description="pet for adoption"),
         "posted_on" : fields.DateTime(dt_format="rfc822", required=True, description="transaction post date"),
-        "deal_owner" : fields.String(required=True, decription="deal owner")
+        "deal_owner" : fields.String(required=True, decription="deal owner"),
+        "pet_id" : fields.String(required=True, decription="pet in question"),
 
     })
 

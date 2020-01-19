@@ -15,6 +15,7 @@ class Deal(db.Model):
     price = db.Column(db.Numeric(100,2), nullable=False, default="0.00")
     status = db.Column(db.String(15), nullable=False, default="adopt")
     deal_owner = db.Column(db.String, db.ForeignKey('user.username', ondelete="cascade"))
+    pet_id = db.Column(db.String, db.ForeignKey('pet.public_id', ondelete="cascade"))
 
     pet_rel = db.relationship("Pet", secondary=pet_price_rel, backref=db.backref("pet", lazy=True), cascade="all, delete", passive_deletes=True)
     
