@@ -11,7 +11,7 @@ def new_post(data, username):
     author = User.query.filter_by(username=username).first()
 
     new_post = Post(
-        post_id = new_post_id,
+        public_id = new_post_id,
         content = data["content"],
         posted_on = datetime.datetime.utcnow(),
         post_author = author.username
@@ -22,7 +22,7 @@ def new_post(data, username):
     statement_one = user_post_rel.insert().values(user_id=author.public_id, post_id=new_post_id)
 
     Helper.execute_changes(statement_one)
-
+    
     return Helper.generate_token("Post", new_post)
 
 def get_all_posts():

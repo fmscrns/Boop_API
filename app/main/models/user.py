@@ -52,7 +52,7 @@ class User(db.Model):
     post_rel = db.relationship("Post", secondary=user_post_rel, backref=db.backref("author", lazy=True))
     sale_rel = db.relationship("Deal", secondary=user_sale_rel, backref=db.backref("seller", lazy=True))
     comm_rel = db.relationship("Comment", secondary=user_comment_rel, backref=db.backref("commenter", lazy=True))
-
+ 
     @property
     def password(self):
         raise AttributeError("password: write-only field")

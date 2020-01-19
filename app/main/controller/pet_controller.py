@@ -1,7 +1,7 @@
 from flask import request
 from flask_restplus import Resource
 from ..util.dto import PetDto
-from ..util.decorator import token_required
+from ..util.decorator import token_required, admin_token_required
 from ..services.user_service import get_logged_in_user
 from ..services.pet_service import *
 from ..services.help import Helper
@@ -103,10 +103,20 @@ class GetBreedPetList(Resource):
 @api.route("/all")
 @api.response(404, "pets not found")
 class GetAllPosts(Resource):
-    @token_required
+    @admin_token_required
     @api.doc("get all pets")
     @api.marshal_with(_pet, envelope='data')
     def get(self):
         pets = get_all_pets()
 
         return pets
+
+# @api.route("<public_id>/transfer")
+# @api.response(404, "Update pet owner")
+# @token_required
+# class PetTransfer(Resource):
+#     def put(self, public_id, new_owner_id):
+#         pet = pet_transfer(public_id=public_id, new_owner_id=new_owner_id)
+
+#         return pet
+
