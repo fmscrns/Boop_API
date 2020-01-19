@@ -1,10 +1,7 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> ed36c303a74185edaf9af2aaffc39be67fffb5e3
 \.idea/
 venv/
 
 *.pyc
 *.xml
 .vscode/settings.json
+.migrations

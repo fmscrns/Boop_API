@@ -24,15 +24,15 @@ class CreatePost(Resource):
 
         return new_post(data=post_data, username=user_username)
 
-@api.route("/<post_id>")
-@api.param("post_id", "post identifier")
+@api.route("/<public_id>")
+@api.param("public_id", "post identifier")
 @api.response(404, "Post not found.")
 class PostOperations(Resource):
     @token_required
     @api.doc("get a post")
     @api.marshal_with(_post)
-    def get(self, post_id):
-        post = get_a_post(post_id)
+    def get(self, public_id):
+        post = get_a_post(public_id)
 
         if not post:
             api.abort(404)
@@ -43,8 +43,8 @@ class PostOperations(Resource):
 
     @token_required
     @api.doc("delete a post")
-    def delete(self, post_id):
-        post = delete_post(post_id)
+    def delete(self, public_id):
+        post = delete_post(public_id)
 
         if not post:
             api.abort(404)
@@ -54,10 +54,10 @@ class PostOperations(Resource):
     
     @token_required
     @api.doc("update post")
-    def put(self, post_id):
+    def put(self, public_id):
         post_data = request.json
 
-        post = update_post(post_id=post_id, data=post_data)
+        post = update_post(public_id=public_id, data=post_data)
 
         if not post:
             api.abort(404)

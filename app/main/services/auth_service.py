@@ -35,11 +35,12 @@ def login_user(data):
 
 def logout_user(data):
     if data:
+        print(data)
         auth_token = data.split(" ")[0]
 
     else:
         auth_token = ""
-        
+
     if auth_token:
         resp = Helper.decode_auth_token(auth_token)
 

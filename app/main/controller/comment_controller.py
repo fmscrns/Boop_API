@@ -11,23 +11,21 @@ api = CommentDto.api
 _comm = CommentDto.comment
 parser = CommentDto.parser
 
-@api.route("/<post_id>")
+@api.route("/<public_id>")
 class CreateComment(Resource):
     @token_required
     @api.response(201, "Comment added")
     @api.doc("add comment", parser=parser)
-    def post(self, post_id):
+    def post(self, public_id):
         comm_data = request.json
 
         user = get_logged_in_user(request)
 
         user_username = user[0]["data"]["username"]
 
-        post = Post.query.filter_by(post_id=post_id).first()
+        post = Post.query.filter_by(public_id=public_id).first()
 
-        current_post = post.post_id
-
-        return new_comment(data=comm_data, username=user_username, post_id=current_post)
+        return new_comment(data=comm_data, username=user_username, public_id=post.public_id)
 
 @api.route("/<public_id>")
 @api.param("public_id", "comment identifier")
@@ -71,15 +69,15 @@ class PostOperations(Resource):
             return comment
 
 
-@api.route("/<post_id>")
-@api.param("post_id", "post identifier")
+@api.route("/<public_id>")
+@api.param("public_id", "post identifier")
 @api.response(404, "Post not found.")
 class GetPostRelatedComments(Resource):
     @token_required
     @api.doc("get post related comments")
     @api.marshal_with(_comm)
-    def get(self, post_id):
-        comment = get_post_rel_comment(post_id)
+    def get(self, public_id):
+        comment = get_post_rel_comment(public_id)
 
         if not comment:
             api.abort(404)

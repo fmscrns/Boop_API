@@ -1,4 +1,7 @@
 {
     "workbench.colorTheme": "Tomorrow Night Blue",
-    "python.pythonPath": "C:\\Users\\SONY\\Python37\\python.exe"
+    "python.pythonPath": "venv\\Scripts\\python.exe",
+    "python.linting.pylintEnabled": false,
+    "python.linting.flake8Enabled": true,
+    "python.linting.enabled": true
 }

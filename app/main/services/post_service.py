@@ -6,12 +6,12 @@ from app.main.models.post import Post
 from app.main.services.help import Helper
 
 def new_post(data, username):
-    new_post_id = str(uuid.uuid4())
+    new_public_id = str(uuid.uuid4())
 
     author = User.query.filter_by(username=username).first()
 
     new_post = Post(
-        public_id = new_post_id,
+        public_id = new_public_id,
         content = data["content"],
         posted_on = datetime.datetime.utcnow(),
         post_author = author.username
@@ -19,29 +19,29 @@ def new_post(data, username):
 
     Helper.save_changes(new_post)
 
-    statement_one = user_post_rel.insert().values(user_id=author.public_id, post_id=new_post_id)
+    statement_one = user_post_rel.insert().values(user_id=author.public_id, public_id=new_public_id)
 
     Helper.execute_changes(statement_one)
     
     return Helper.generate_token("Post", new_post)
 
 def get_all_posts():
-    return Post.query.all()
+    return Post.query.order_by(Post.posted_on.desc()).all()
 
-def get_a_post(post_id):
-    post = db.session.query(Post.post_id, Post.content, Post.posted_on, Post.post_author).first()
+def get_a_post(public_id):
+    post = db.session.query(Post.public_id, Post.content, Post.posted_on, Post.post_author).first()
     print(post)
     post_obj = {}
 
-    post_obj["post_id"] = post[0]
+    post_obj["public_id"] = post[0]
     post_obj["content"] = post[1]
     post_obj["posted_on"] = post[2]
     post_obj["post_author"] = post[3]
 
     return post_obj
 
-def delete_post(post_id):
-    post = Post.query.filter_by(post_id=post_id).first()
+def delete_post(public_id):
+    post = Post.query.filter_by(public_id=public_id).first()
 
     if post:
         db.session.delete(post)
@@ -53,8 +53,8 @@ def delete_post(post_id):
     else:
         return Helper.return_resp_obj("fail", "No post found.", None, 409)
 
-def update_post(post_id, data):
-    post = Post.query.filter_by(post_id=post_id).first()
+def update_post(public_id, data):
+    post = Post.query.filter_by(public_id=public_id).first()
 
     post.content = data["content"]
 
@@ -66,14 +66,14 @@ def update_post(post_id, data):
 def get_user_posts(username):
     user_id = User.query.filter_by(username=username).first().public_id
 
-    posts = db.session.query(Post.post_id, Post.content, Post.posted_on, Post.post_author, User.first_name, User.last_name).filter(User.public_id==user_id).filter(user_post_rel.c.user_id==User.public_id).filter(user_post_rel.c.post_id==Post.post_id).all()
+    posts = db.session.query(Post.public_id, Post.content, Post.posted_on, Post.post_author, User.first_name, User.last_name).filter(User.public_id==user_id).filter(user_post_rel.c.user_id==User.public_id).filter(user_post_rel.c.public_id==Post.public_id).order_by(Post.posted_on.desc()).all()
 
     post_list = []
 
     for x, post in enumerate(posts):
         post_obj = {}
         
-        post_obj["post_id"] = post[0]
+        post_obj["public_id"] = post[0]
         post_obj["content"] = post[1]
         post_obj["posted_on"] = post[2]
         post_obj["post_author"] = post[3]

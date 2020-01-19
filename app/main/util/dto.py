@@ -89,7 +89,7 @@ class PostDto:
     api = Namespace("post", description="post related operations")
 
     post = api.model("post", {
-        "post_id" : fields.String(require=True, description="post id"),
+        "public_id" : fields.String(require=True, description="post id"),
         "content" : fields.String(required=True, description="post contents"),
         "posted_on" : fields.DateTime(dt_format="rfc822", required=True, description="date posted"),
         "post_author" : fields.String(required=True, decription="post author")
