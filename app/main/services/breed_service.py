@@ -46,7 +46,6 @@ def edit_breed(public_id, data):
 
     if breed:
         breed.breed_name = data["breedName"]
-        breed.specie_id = data["specieId"]
 
         db.session.commit()
 
