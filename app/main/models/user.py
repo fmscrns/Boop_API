@@ -1,5 +1,5 @@
 from .. import db, flask_bcrypt
-from app.main.models import business, circle, post, deal, request, photo
+from app.main.models import business, circle, post, deal, request
 
 user_pet_rel = db.Table("user_pet_rel",
     db.Column("user_username", db.String, db.ForeignKey("user.username", ondelete="cascade")),

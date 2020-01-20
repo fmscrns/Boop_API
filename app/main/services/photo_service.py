@@ -5,47 +5,7 @@ from app.main.models.user import User, user_post_rel
 from app.main.models.photo import Photo
 from app.main.services.help import Helper
 
-def new_profPhoto(data, username):
-    new_public_id = str(uuid.uuid4())
-
-    uploader = User.query.filter_by(username=username).first()
-
-    new_photo = Photo(
-        public_id = new_public_id,
-        filename = data["filename"],
-        posted_on = datetime.datetime.utcnow(),
-        uploader = uploader.username
-    )
-
-    Helper.save_changes(new_photo)
-
-    statement_one = user_post_rel.insert().values(user_id=author.public_id, public_id=new_public_id)
-
-    Helper.execute_changes(statement_one)
-    
-    return Helper.generate_token("Post", new_post)
-
-def new_coverPhoto(data, username):
-    new_public_id = str(uuid.uuid4())
-
-    uploader = User.query.filter_by(username=username).first()
-
-    new_photo = Photo(
-        public_id = new_public_id,
-        filename = data["filename"],
-        posted_on = datetime.datetime.utcnow(),
-        uploader = uploader.username
-    )
-
-    Helper.save_changes(new_photo)
-
-    statement_one = user_post_rel.insert().values(user_id=author.public_id, public_id=new_public_id)
-
-    Helper.execute_changes(statement_one)
-    
-    return Helper.generate_token("Post", new_post)
-
-def new_postPhoto(data, username):
+def save_new_photo(data, username):
     new_public_id = str(uuid.uuid4())
 
     uploader = User.query.filter_by(username=username).first()
@@ -64,6 +24,11 @@ def new_postPhoto(data, username):
     Helper.execute_changes(statement_one)
     
     return Helper.generate_token("Photo", new_photo)
+
+def insert_post_photo(data):
+    statement_one = post_photo_rel.insert().values(post_id=data.get("post_id"), photo_id=data.get("filename"))
+
+    Helper.execute_changes(statement_one)
 
 def get_all_photo():
     return Photo.query.order_by(Photo.posted_on.desc()).all()

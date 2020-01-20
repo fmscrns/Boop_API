@@ -17,12 +17,20 @@ class CreatePhoto(Resource):
     @api.doc("create a photo", parser=parser)
     def post(self):
         post_data = request.json
-
+        
         user = get_logged_in_user(request)
         
         user_username = user[0]["data"]["username"]
 
-        return save_new_photo(data=post_data, username=user_username)
+        t = save_new_photo(data=post_data, username=user_username)
+
+@api.route("/insert")
+class InsertPhoto(Resource):
+    @token_required
+    @api.response(201, "Photo inserted."
+    @api.doc("insert a photo", parser=parser)
+    def post(self):
+        return insert_post_photo(request):
  
 @api.route("/<public_id>")
 @api.param("public_id", "photo identifier")

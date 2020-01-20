@@ -21,9 +21,9 @@ class PostPet(Resource):
 
         user = get_logged_in_user(request)
         
-        user_id = user[0]["data"]["public_id"]
+        user_username = user[0]["data"]["username"]
         
-        return save_new_pet(data=post_data, public_id=user_id)
+        return save_new_pet(data=post_data, username=user_username)
 
 @api.route("/<public_id>")
 @api.param("public_id", "The Pet identifier")

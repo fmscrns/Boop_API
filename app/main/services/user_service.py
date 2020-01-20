@@ -127,7 +127,7 @@ def get_logged_in_user(new_request):
         return response_object, 401
 
 def get_pet_owners(public_id):
-    users = db.session.query(User.first_name, User.last_name, User.bio, User.email, User.username, User.contact_no).filter(user_pet_rel.c.user_id==User.public_id).filter(user_pet_rel.c.pet_id==public_id).all()
+    users = db.session.query(User.first_name, User.last_name, User.bio, User.email, User.username, User.contact_no).filter(user_pet_rel.c.user_username==User.username).filter(user_pet_rel.c.pet_id==public_id).all()
 
     user_list = []
     

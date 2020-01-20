@@ -7,12 +7,12 @@ from app.main.services.help import Helper
 
 def new_post(data, username):
     new_public_id = str(uuid.uuid4())
-
     new_post = Post(
         public_id = new_public_id,
         content = data["content"],
         posted_on = datetime.datetime.utcnow(),
-        post_author = username
+        post_author = username,
+        profPhoto_filename = data["profPhoto_filename"]
     )
 
     Helper.save_changes(new_post)
@@ -27,7 +27,7 @@ def get_all_posts():
     return Post.query.order_by(Post.posted_on.desc()).all()
 
 def get_a_post(public_id):
-    post = db.session.query(Post.public_id, Post.content, Post.posted_on, Post.post_author).filter(Post.public_id==public_id).first()
+    post = db.session.query(Post.public_id, Post.content, Post.posted_on, Post.post_author, Post.profPhoto_filename).filter(Post.public_id==public_id).first()
     
     post_obj = {}
 
@@ -35,6 +35,7 @@ def get_a_post(public_id):
     post_obj["content"] = post[1]
     post_obj["posted_on"] = post[2]
     post_obj["post_author"] = post[3]
+    post_obj["profPhoto_filename"] = post[4]
 
     return post_obj
 
@@ -64,7 +65,7 @@ def update_post(public_id, data):
 def get_user_posts(username):
     user_id = User.query.filter_by(username=username).first().public_id
 
-    posts = db.session.query(Post.public_id, Post.content, Post.posted_on, Post.post_author, User.first_name, User.last_name).filter(User.public_id==user_id).filter(user_post_rel.c.user_username==username).filter(user_post_rel.c.public_id==Post.public_id).order_by(Post.posted_on.desc()).all()
+    posts = db.session.query(Post.public_id, Post.content, Post.posted_on, Post.post_author, Post.profPhoto_filename).filter(User.public_id==user_id).filter(user_post_rel.c.user_username==username).filter(user_post_rel.c.public_id==Post.public_id).order_by(Post.posted_on.desc()).all()
 
     post_list = []
 
@@ -75,7 +76,45 @@ def get_user_posts(username):
         post_obj["content"] = post[1]
         post_obj["posted_on"] = post[2]
         post_obj["post_author"] = post[3]
+        post_obj["profPhoto_filename"] = post[4]
         
         post_list.append(post_obj)
 
     return post_list
+
+def get_logged_in_post(new_request):
+    auth_token = new_request.headers.get("authorization")
+
+    if auth_token:
+        public_id_resp = Helper.decode_auth_token(auth_token)
+        
+        post = Post.query.filter_by(public_id=public_id_resp).first()
+
+        if post:
+            response_object = {
+                "status" : "success",
+                "data" : {
+                    "public_id" : post.public_id,
+                    "content" : post.content,
+                    "posted_on" : str(post.posted_on),
+                    "post_author" : post.post_author
+                }
+            }
+
+            return response_object
+
+        else:
+            response_object = {
+                "status" : "fail",
+                "message": "Provide a valid authorized token."
+            }
+
+            return response_object
+
+    else:
+        response_object = {
+            "status": "fail",
+            "message": "Provide a valid authorized token."
+        }
+
+        return response_object

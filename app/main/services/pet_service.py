@@ -6,14 +6,9 @@ from app.main.models.specie import Specie
 from app.main.models.breed import Breed
 from app.main.services.help import Helper
 
-def save_new_pet(data, public_id):
+def save_new_pet(data, username):
     new_public_id = str(uuid.uuid4())
-
-<<<<<<< Updated upstream
-    owner = User.query.filter_by(public_id=public_id).first()
     
-=======
->>>>>>> Stashed changes
     new_pet = Pet(
         public_id = new_public_id,
         pet_name = data["petName"],
@@ -23,11 +18,7 @@ def save_new_pet(data, public_id):
         profPhoto_filename = data["profPhotoFilename"],
         coverPhoto_filename = data["coverPhotoFilename"],
         registered_on = datetime.datetime.utcnow(),
-<<<<<<< Updated upstream
-        pet_owner = owner.public_id
-=======
         pet_owner = username
->>>>>>> Stashed changes
     )
 
     Helper.save_changes(new_pet)
@@ -46,8 +37,8 @@ def get_all_pets():
     return Pet.query.all()
 
 def get_a_pet(public_id):
-    pet = db.session.query(Pet.public_id, Pet.pet_name, Pet.bio, Pet.birthday, Pet.sex, Pet.profPic_filename, Pet.pet_owner, Specie.specie_name, Breed.breed_name).filter(Pet.public_id==public_id).filter(pet_kind_rel.c.pet_id==Pet.public_id).filter(Specie.public_id==pet_kind_rel.c.specie_id).filter(Breed.public_id==pet_kind_rel.c.breed_id).first()
-    print(pet)
+    pet = db.session.query(Pet.public_id, Pet.pet_name, Pet.bio, Pet.birthday, Pet.sex, Pet.profPhoto_filename, Pet.coverPhoto_filename, Pet.pet_owner, Specie.specie_name, Breed.breed_name).filter(Pet.public_id==public_id).filter(pet_kind_rel.c.pet_id==Pet.public_id).filter(Specie.public_id==pet_kind_rel.c.specie_id).filter(Breed.public_id==pet_kind_rel.c.breed_id).first()
+
     pet_obj = {}
 
     pet_obj["public_id"] = pet[0]
