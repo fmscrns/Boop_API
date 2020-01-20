@@ -1,2 +1,9 @@
-/venv/
-.idea/
+\.idea/
+venv/
+
+*.pyc
+*.xml
+.vscode/settings.json
+/migrations
+*.pyc
+*.pyo
