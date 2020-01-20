@@ -17,8 +17,8 @@ class Deal(db.Model):
     status = db.Column(db.String(15), nullable=False, default="adopt")
     deal_owner = db.Column(db.String, db.ForeignKey('user.username', ondelete="cascade"))
     pet_id = db.Column(db.String, db.ForeignKey('pet.public_id', ondelete="cascade"))
-    req_id = db.Column(db.String, db.ForeignKey('request.public_id', ondelete="cascade"))
 
+    has_requests = db.relationship("Request", backref="deal", lazy=True)
     pet_rel = db.relationship("Pet", secondary=pet_price_rel, backref=db.backref("pet", lazy=True), cascade="all, delete", passive_deletes=True)
     
     def __repr__(self):

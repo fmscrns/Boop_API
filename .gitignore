@@ -4,4 +4,6 @@ venv/
 *.pyc
 *.xml
 .vscode/settings.json
-.migrations
+/migrations
+*.pyc
+*.pyo
