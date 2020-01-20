@@ -12,6 +12,7 @@ from .main.controller.post_controller import api as post_ns
 from .main.controller.deal_controller import api as deal_ns
 from .main.controller.comment_controller import api as comment_ns
 from .main.controller.request_controller import api as request_ns
+from .main.controller.service_controller import api as service_ns
 
 blueprint = Blueprint("api", __name__)
 
@@ -32,3 +33,4 @@ api.add_namespace(post_ns, path="/post")
 api.add_namespace(deal_ns, path="/deal")
 api.add_namespace(comment_ns, path="/comment")
 api.add_namespace(request_ns, path="/req")
+api.add_namespace(service_ns, path="/service")

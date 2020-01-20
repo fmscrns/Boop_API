@@ -1,5 +1,5 @@
 from .. import db, flask_bcrypt
-from app.main.models import business, circle, post, deal, request
+from app.main.models import business, circle, post, deal, request, service
 
 user_pet_rel = db.Table("user_pet_rel",
     db.Column("user_username", db.String, db.ForeignKey("user.username", ondelete="cascade")),
@@ -36,6 +36,11 @@ user_request_rel = db.Table("user_request_rel",
     db.Column("req_id", db.String, db.ForeignKey("request.public_id", ondelete="cascade"))
 )
 
+user_service_rel = db.Table("user_service_rel",
+    db.Column("user_id", db.String, db.ForeignKey("user.public_id", ondelete="cascade")),
+    db.Column("service_id", db.String, db.ForeignKey("service.public_id", ondelete="cascade"))
+)
+
 class User(db.Model):
     __tablename__ = "user"
 
@@ -59,7 +64,8 @@ class User(db.Model):
     post_rel = db.relationship("Post", secondary=user_post_rel, backref=db.backref("author", lazy=True), cascade="all, delete", passive_deletes=True)
     sale_rel = db.relationship("Deal", secondary=user_sale_rel, backref=db.backref("seller", lazy=True), cascade="all, delete", passive_deletes=True)
     comm_rel = db.relationship("Comment", secondary=user_comment_rel, backref=db.backref("commenter", lazy=True), cascade="all, delete", passive_deletes=True)
-    
+    service_rel = db.relationship("Service", secondary=user_service_rel, backref=db.backref("owner", lazy=True), cascade="all, delete", passive_deletes=True)
+ 
     @property
     def password(self):
         raise AttributeError("password: write-only field")

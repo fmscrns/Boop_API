@@ -143,3 +143,18 @@ class RequestDto:
     })
 
     parser = api.parser
+
+class ServiceDto:
+    api = Namespace("services", description="service operations")
+
+    service = api.model("service", {
+        "public_id" : fields.String(required=True, decription="service id"),
+        "days" : fields.Date(string='Date', required=True, description="available days"),
+        "open_time" : fields.DateTime(required=True, description="opening time"),
+        "close_time" : fields.DateTime(required=True, description="closing time"),
+        "description" : fields.String(required=True, description="service description"),
+        "first_name" :  fields.String(required=True, description="user first name"), 
+        "last_name" :  fields.String(required=True, description="user last name")
+    })
+
+    parser = api.parser
