@@ -37,7 +37,7 @@ def get_all_pets():
     return Pet.query.all()
 
 def get_a_pet(public_id):
-    pet = db.session.query(Pet.public_id, Pet.pet_name, Pet.bio, Pet.birthday, Pet.sex, Pet.profPic_filename, Pet.pet_owner, Specie.specie_name, Breed.breed_name).filter(Pet.public_id==public_id).filter(pet_kind_rel.c.pet_id==Pet.public_id).filter(Specie.public_id==pet_kind_rel.c.specie_id).filter(Breed.public_id==pet_kind_rel.c.breed_id).first()
+    pet = db.session.query(Pet.public_id, Pet.pet_name, Pet.bio, Pet.birthday, Pet.sex, Pet.profPhoto_filename, Pet.coverPhoto_filename, Pet.pet_owner, Specie.specie_name, Breed.breed_name).filter(Pet.public_id==public_id).filter(pet_kind_rel.c.pet_id==Pet.public_id).filter(Specie.public_id==pet_kind_rel.c.specie_id).filter(Breed.public_id==pet_kind_rel.c.breed_id).first()
     print(pet)
     pet_obj = {}
 
