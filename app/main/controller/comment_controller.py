@@ -69,18 +69,18 @@ class PostOperations(Resource):
             return comment
 
 
-@api.route("/<public_id>")
+@api.route("/post/<public_id>")
 @api.param("public_id", "post identifier")
-@api.response(404, "Post not found.")
+@api.response(404, "Comment not found.")
 class GetPostRelatedComments(Resource):
     @token_required
     @api.doc("get post related comments")
     @api.marshal_with(_comm)
     def get(self, public_id):
         comment = get_post_rel_comment(public_id)
-
+        
         if not comment:
-            api.abort(404)
+            return []
 
         else:
             return comment

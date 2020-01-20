@@ -8,18 +8,16 @@ from app.main.services.help import Helper
 def new_post(data, username):
     new_public_id = str(uuid.uuid4())
 
-    author = User.query.filter_by(username=username).first()
-
     new_post = Post(
         public_id = new_public_id,
         content = data["content"],
         posted_on = datetime.datetime.utcnow(),
-        post_author = author.username
+        post_author = username
     )
 
     Helper.save_changes(new_post)
 
-    statement_one = user_post_rel.insert().values(user_id=author.public_id, public_id=new_public_id)
+    statement_one = user_post_rel.insert().values(user_username=username, public_id=new_public_id)
 
     Helper.execute_changes(statement_one)
     
@@ -29,8 +27,8 @@ def get_all_posts():
     return Post.query.order_by(Post.posted_on.desc()).all()
 
 def get_a_post(public_id):
-    post = db.session.query(Post.public_id, Post.content, Post.posted_on, Post.post_author).filter_by(public_id=public_id).first()
-    print(post)
+    post = db.session.query(Post.public_id, Post.content, Post.posted_on, Post.post_author).filter(Post.public_id==public_id).first()
+    
     post_obj = {}
 
     post_obj["public_id"] = post[0]
@@ -66,7 +64,7 @@ def update_post(public_id, data):
 def get_user_posts(username):
     user_id = User.query.filter_by(username=username).first().public_id
 
-    posts = db.session.query(Post.public_id, Post.content, Post.posted_on, Post.post_author, User.first_name, User.last_name).filter(User.public_id==user_id).filter(user_post_rel.c.user_id==User.public_id).filter(user_post_rel.c.public_id==Post.public_id).order_by(Post.posted_on.desc()).all()
+    posts = db.session.query(Post.public_id, Post.content, Post.posted_on, Post.post_author, User.first_name, User.last_name).filter(User.public_id==user_id).filter(user_post_rel.c.user_username==username).filter(user_post_rel.c.public_id==Post.public_id).order_by(Post.posted_on.desc()).all()
 
     post_list = []
 

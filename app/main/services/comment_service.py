@@ -9,20 +9,19 @@ from app.main.services.help import Helper
 def new_comment(data, username, public_id):
     new_public_id = str(uuid.uuid4())
 
-    commenter = User.query.filter_by(username=username).first()
     post = Post.query.filter_by(public_id=public_id).first()
 
     new_comment = Comment(
         public_id = new_public_id,
         posted_on = datetime.datetime.utcnow(),
         comment = data["comment"],
-        posted_by = commenter.username,
+        posted_by = username,
         post_id = post.public_id
     )
 
     Helper.save_changes(new_comment)
 
-    statement_one = user_comment_rel.insert().values(user_id=commenter.public_id, comm_id=new_public_id)
+    statement_one = user_comment_rel.insert().values(user_username=username, comm_id=new_public_id)
 
     statement_two = comment_post_rel.insert().values(post_id=post.public_id, comm_id=new_public_id)
 
@@ -36,17 +35,9 @@ def get_all_comments():
     return Comment.query.all()
 
 def get_a_comment(public_id):
-    comment = db.session.query(Comment.public_id, Comment.posted_on, Comment.comment, Comment.posted_by, Comment.post_id).filter(Comment.public_id==public_id).first()
-    print(comment)
-    comm_obj = {}
+    comment = Comment.query.filter_by(public_id=public_id).first()
 
-    comm_obj["public_id"] = comment[0]
-    comm_obj["posted_on"] = comment[1]
-    comm_obj["comment"] = comment[2]
-    comm_obj["posted_by"] = comment[3]
-    comm_obj["post_id"] = comment[4]
-
-    return comm_obj
+    return comment
 
 def delete_comment(public_id):
     comm = Comment.query.filter_by(public_id=public_id).first()
@@ -77,8 +68,6 @@ def edit_comment(public_id, data):
 
 
 def get_post_rel_comment(public_id):
-    post = Post.query.filter_by(public_id=public_id).first()
-
-    comments = Comment.query.filter_by(post_id=post.public_id).first
-
+    comments = Comment.query.filter_by(post_id=public_id).all()
+    
     return comments

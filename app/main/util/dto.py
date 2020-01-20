@@ -22,7 +22,10 @@ class UserDto:
         "bio" : fields.String(required=True, description="user bio"),
         "email" : fields.String(required=True, description="user email"),
         "username" : fields.String(required=True, description="user username"),
-        "contact_no" : fields.String(required=False, description="user contact number")
+        "contact_no" : fields.String(required=False, description="user contact number"),
+        "profPhoto_filename" : fields.String(required=False, description="user profile photo"),
+        "coverPhoto_filename" : fields.String(required=False, description="user cover photo"),
+        "registered_on" : fields.DateTime(required=False, description="user date registration"),
     })
 
     parser = api.parser()
@@ -36,7 +39,8 @@ class PetDto:
         "bio" : fields.String(required=True, description="pet bio"),
         "birthday" : fields.DateTime(dt_format="rfc822", required=False, description="pet birthday"),
         "sex" : fields.String(required=True, description="pet sex"),
-        "profPic_filename" : fields.String(required=True, description="pet large profile picture"),
+        "profPhoto_filename" : fields.String(required=True, description="pet profile photo"),
+        "coverPhoto_filename" : fields.String(required=True, description="pet cover photo"),
         "specie_name" : fields.String(required=True, description="pet specie"),
         "breed_name" : fields.String(required=True, description="pet breed"),
         "pet_owner" : fields.String(required=True, decription="pet owner")
@@ -108,7 +112,6 @@ class DealDto:
         "posted_on" : fields.DateTime(dt_format="rfc822", required=True, description="transaction post date"),
         "deal_owner" : fields.String(required=True, decription="deal owner"),
         "pet_id" : fields.String(required=True, decription="pet in question"),
-
     })
 
     parser=api.parser

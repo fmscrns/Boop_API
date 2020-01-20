@@ -47,7 +47,6 @@ def delete_user(username):
 
 def update_user(username, data):
     user = User.query.filter_by(username=username).first()
-    
     if user:
         if User.query.filter_by(email=data["email"]).count() == 0 or User.query.filter_by(email=data["email"]).count() == 1 and user.email == data["email"]:
             user.first_name = data["firstName"]
@@ -55,7 +54,8 @@ def update_user(username, data):
             user.email = data["email"]
             user.username = data["username"]
             user.contact_no = data["contactNo"]
-            user.password = data["password"]
+            user.profPhoto_filename = data["profPhotoFilename"]
+            user.coverPhoto_filename = data["coverPhotoFilename"]
 
             db.session.commit()
 
@@ -102,8 +102,9 @@ def get_logged_in_user(new_request):
                     "username" : user.username,
                     "contactNo" : user.contact_no,
                     "admin" : user.admin,
-                    "registeredOn" : str(user.registered_on),
-                    "public_id" : user.public_id
+                    "profPhotoFilename" : user.profPhoto_filename,
+                    "coverPhotoFilename" : user.coverPhoto_filename,
+                    "registeredOn" : str(user.registered_on)
                 }
             }
 

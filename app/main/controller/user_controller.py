@@ -60,14 +60,8 @@ class UserOperations(Resource):
     @api.doc("update a user", parser=parser)
     def put(self, username):
         post_data = request.json
-        print(post_data)
 
-        user = update_user(username=username, data=post_data)
-        if not user:
-            api.abort(404)
-
-        else:
-            return user
+        return update_user(username, post_data)  
 
 @api.route("/verify/email")
 class UserByEmailExistenceCheck(Resource):
