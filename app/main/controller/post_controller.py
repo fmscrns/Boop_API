@@ -52,19 +52,6 @@ class PostOperations(Resource):
         else:
             return post
     
-    @token_required
-    @api.doc("update post")
-    def put(self, public_id):
-        post_data = request.json
-
-        post = update_post(public_id=public_id, data=post_data)
-
-        if not post:
-            api.abort(404)
-        
-        else:
-            return post
-
 @api.route("/user/<username>")
 @api.param("username", "post of a specific user")
 @api.response(404, "posts not found.")
