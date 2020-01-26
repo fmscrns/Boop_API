@@ -10,7 +10,7 @@ class Post(db.Model):
     content = db.Column(db.String(300), nullable=False)
     posted_on = db.Column(db.DateTime, nullable=False)
     post_author = db.Column(db.String, db.ForeignKey('user.username', ondelete="cascade"))
-    profPhoto_filename = db.Column(db.String(50))
+    photo = db.Column(db.String(50))
 
     def __repr__(self):
         return "<post '{}'>".format(self.public_id)

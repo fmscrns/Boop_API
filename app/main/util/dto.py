@@ -97,7 +97,7 @@ class PostDto:
         "content" : fields.String(required=True, description="post contents"),
         "posted_on" : fields.DateTime(dt_format="rfc822", required=True, description="date posted"),
         "post_author" : fields.String(required=True, decription="post author"),
-        "profPhoto_filename" : fields.String(required=True, decription="post photo")
+        "photo" : fields.String(description="post photo")
     })
 
     parser = api.parser
@@ -140,6 +140,21 @@ class RequestDto:
         "status" : fields.String(required=True, decription="request status"),
         "deal_id" : fields.String(required=True, decription="deal id"),
         "requester_id" : fields.String(required=True, decription="request owner id"),
+    })
+
+    parser = api.parser
+
+class ServiceDto:
+    api = Namespace("services", description="service operations")
+
+    service = api.model("service", {
+        "public_id" : fields.String(required=True, decription="service id"),
+        "days" : fields.Date(string='Date', required=True, description="available days"),
+        "open_time" : fields.DateTime(required=True, description="opening time"),
+        "close_time" : fields.DateTime(required=True, description="closing time"),
+        "description" : fields.String(required=True, description="service description"),
+        "first_name" :  fields.String(required=True, description="user first name"), 
+        "last_name" :  fields.String(required=True, description="user last name")
     })
 
     parser = api.parser
