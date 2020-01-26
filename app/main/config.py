@@ -1,6 +1,6 @@
 import os
 
-postgres_local_base = "postgresql://postgres:postgres@localhost:5432/BoopIt2"
+postgres_local_base = "postgresql://postgres:postgres@localhost:5432/BoopIt3"
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -9,7 +9,7 @@ class Config:
     DEBUG = False
 
 class DevelopmentConfig(Config):
-    SQLALCHEMY_DATABASE_URI = "postgresql://postgres:postgres@localhost:5432/BoopIt2"
+    SQLALCHEMY_DATABASE_URI = "postgresql://postgres:postgres@localhost:5432/BoopIt3"
     DEBUG = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 

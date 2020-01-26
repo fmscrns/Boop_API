@@ -25,7 +25,7 @@ def create_service(data, username):
 
     Helper.save_changes(new_service)
 
-    statement_one = user_service_rel.insert().values(user_id=username, service_id=new_public_id)
+    statement_one = user_service_rel.insert().values(user_id=username, service_id=new_public_id, service_type=data["typeID"])
 
     Helper.execute_changes(statement_one)
 

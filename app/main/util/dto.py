@@ -154,7 +154,18 @@ class ServiceDto:
         "close_time" : fields.DateTime(required=True, description="closing time"),
         "description" : fields.String(required=True, description="service description"),
         "first_name" :  fields.String(required=True, description="user first name"), 
-        "last_name" :  fields.String(required=True, description="user last name")
+        "last_name" :  fields.String(required=True, description="user last name"),
+        "service_type" : fields.String(required=True, description="service type"),
+    })
+
+    parser = api.parser
+
+class ServiceTypeDto:
+    api = Namespace("service types", description="service types operations")
+
+    service_type = api.model("service_type",{
+        "public_id" : fields.String(required=True, decription="service id"),
+        "service_type" : fields.String(required=True, description="service type description")
     })
 
     parser = api.parser
