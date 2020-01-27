@@ -1,5 +1,5 @@
 from .. import db
-from app.main.models import specie, user, photo
+from app.main.models import specie, user
 
 pet_kind_rel = db.Table("pet_kind_rel",
     db.Column("pet_id", db.String, db.ForeignKey("pet.public_id", ondelete="cascade")),
@@ -16,10 +16,12 @@ class Pet(db.Model):
     bio = db.Column(db.String(200), nullable=True)
     birthday = db.Column(db.DateTime, nullable=True)
     sex = db.Column(db.String(100), nullable=False)
+    status = db.Column(db.Integer, nullable=False)
+    price = db.Column(db.Numeric(100,2), nullable=False)
     profPhoto_filename = db.Column(db.String(50), nullable=False, default="pet-default-profPhoto.jpg")
     coverPhoto_filename = db.Column(db.String(50), nullable=False, default="pet-default-coverPhoto.jpg")
     registered_on = db.Column(db.DateTime, nullable=False)
-    pet_owner = db.Column(db.String, db.ForeignKey('user.public_id', ondelete="cascade"))
+    pet_owner = db.Column(db.String, db.ForeignKey('user.username', ondelete="cascade"))
 
     specie_rel = db.relationship("Specie", secondary=pet_kind_rel, backref=db.backref("pet", lazy=True), cascade="all, delete", passive_deletes=True)
     

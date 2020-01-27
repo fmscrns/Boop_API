@@ -6,28 +6,21 @@ from app.main.models.specie import Specie
 from app.main.models.breed import Breed
 from app.main.services.help import Helper
 
-def save_new_pet(data, public_id):
+def save_new_pet(data, username):
     new_public_id = str(uuid.uuid4())
 
-<<<<<<< Updated upstream
-    owner = User.query.filter_by(public_id=public_id).first()
-    
-=======
->>>>>>> Stashed changes
     new_pet = Pet(
         public_id = new_public_id,
         pet_name = data["petName"],
         bio = data["bio"],
         birthday = data["birthday"],
         sex = data["sex"],
+        status = data["status"],
+        price = data["price"],
         profPhoto_filename = data["profPhotoFilename"],
         coverPhoto_filename = data["coverPhotoFilename"],
         registered_on = datetime.datetime.utcnow(),
-<<<<<<< Updated upstream
-        pet_owner = owner.public_id
-=======
         pet_owner = username
->>>>>>> Stashed changes
     )
 
     Helper.save_changes(new_pet)
@@ -46,8 +39,19 @@ def get_all_pets():
     return Pet.query.all()
 
 def get_a_pet(public_id):
-    pet = db.session.query(Pet.public_id, Pet.pet_name, Pet.bio, Pet.birthday, Pet.sex, Pet.profPic_filename, Pet.pet_owner, Specie.specie_name, Breed.breed_name).filter(Pet.public_id==public_id).filter(pet_kind_rel.c.pet_id==Pet.public_id).filter(Specie.public_id==pet_kind_rel.c.specie_id).filter(Breed.public_id==pet_kind_rel.c.breed_id).first()
-    print(pet)
+    pet = db.session.query(Pet.public_id, 
+                           Pet.pet_name, 
+                           Pet.bio, 
+                           Pet.birthday, 
+                           Pet.sex, 
+                           Pet.status, 
+                           Pet.price, 
+                           Pet.profPhoto_filename, 
+                           Pet.coverPhoto_filename, 
+                           Specie.specie_name, 
+                           Breed.breed_name, 
+                           Pet.pet_owner).filter(Pet.public_id==public_id).filter(pet_kind_rel.c.pet_id==Pet.public_id).filter(Specie.public_id==pet_kind_rel.c.specie_id).filter(Breed.public_id==pet_kind_rel.c.breed_id).first()
+
     pet_obj = {}
 
     pet_obj["public_id"] = pet[0]
@@ -55,11 +59,13 @@ def get_a_pet(public_id):
     pet_obj["bio"] = pet[2]
     pet_obj["birthday"] = pet[3]
     pet_obj["sex"] = pet[4]
-    pet_obj["profPhoto_filename"] = pet[5]
-    pet_obj["coverPhoto_filename"] = pet[6]
-    pet_obj["specie_name"] = pet[7]
-    pet_obj["breed_name"] = pet[8]
-    pet_obj["pet_owner"] = pet[9]
+    pet_obj["status"] = pet[5]
+    pet_obj["price"] = pet[6]
+    pet_obj["profPhoto_filename"] = pet[7]
+    pet_obj["coverPhoto_filename"] = pet[8]
+    pet_obj["specie_name"] = pet[9]
+    pet_obj["breed_name"] = pet[10]
+    pet_obj["pet_owner"] = pet[11]
 
     return pet_obj
 
@@ -83,9 +89,13 @@ def update_pet(public_id, data):
         pet.pet_name = data["petName"]
         pet.bio = data["bio"]
         pet.profPic_filename = data["profPhotoFilename"]
+        pet.coverPic_filename = data["coverPhotoFilename"]
         pet.sex = data["sex"]
         pet.birthday = data["birthday"]
-
+        pet.status = data["status"]
+        pet.price = data["price"]
+        pet.pet_owner = data["petOwner"]
+        
         db.session.commit()
         
         return Helper.return_resp_obj("success", "Pet updated successfully.", None, 200)
@@ -101,6 +111,8 @@ def get_user_pets(username):
                             Pet.bio, 
                             Pet.birthday, 
                             Pet.sex, 
+                            Pet.status,
+                            Pet.price,
                             Pet.profPhoto_filename, 
                             Pet.coverPhoto_filename, 
                             Pet.pet_owner, 
@@ -117,11 +129,13 @@ def get_user_pets(username):
         pet_obj["bio"] = pet[2]
         pet_obj["birthday"] = pet[3]
         pet_obj["sex"] = pet[4]
-        pet_obj["profPhoto_filename"] = pet[5]
-        pet_obj["coverPhoto_filename"] = pet[6]
-        pet_obj["pet_owner"] = pet[7]
-        pet_obj["specie_name"] = pet[8]
-        pet_obj["breed_name"] = pet[9]
+        pet_obj["status"] = pet[5]
+        pet_obj["price"] = pet[6]
+        pet_obj["profPhoto_filename"] = pet[7]
+        pet_obj["coverPhoto_filename"] = pet[8]
+        pet_obj["pet_owner"] = pet[9]
+        pet_obj["specie_name"] = pet[10]
+        pet_obj["breed_name"] = pet[11]
 
         pet_list.append(pet_obj)
 
@@ -190,7 +204,6 @@ def pet_transfer(public_id, new_owner_id):
     pet = Pet.query.filter_by(public_id=public_id).first()
 
     new_owner = User.query.filter_by(public_id=new_owner_id).first()
-    print(new_owner.public_id)
 
     if pet:
         pet.pet_owner = new_owner.public_id
@@ -201,7 +214,7 @@ def pet_transfer(public_id, new_owner_id):
 
         Helper.execute_changes(statement_one)
 
-        return Helper.return_resp_obj("success", "Pet succesfully transferred", None, 200)
+        return Helper.return_resp_obj("success", "Pet succesfully transferred.", None, 200)
 
     else:
-        return Helper.return_resp_obj("fail", "No pet found.", None, 409)
+        return Helper.return_resp_obj("fail", "No pet found.", None, 404)

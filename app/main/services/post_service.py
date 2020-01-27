@@ -12,6 +12,7 @@ def new_post(data, username):
         public_id = new_public_id,
         content = data["content"],
         posted_on = datetime.datetime.utcnow(),
+        photo = data["photo"],
         post_author = username
     )
 
@@ -27,14 +28,15 @@ def get_all_posts():
     return Post.query.order_by(Post.posted_on.desc()).all()
 
 def get_a_post(public_id):
-    post = db.session.query(Post.public_id, Post.content, Post.posted_on, Post.post_author).filter(Post.public_id==public_id).first()
+    post = db.session.query(Post.public_id, Post.content, Post.photo, Post.posted_on, Post.post_author).filter(Post.public_id==public_id).first()
     
     post_obj = {}
 
     post_obj["public_id"] = post[0]
     post_obj["content"] = post[1]
-    post_obj["posted_on"] = post[2]
-    post_obj["post_author"] = post[3]
+    post_obj["photo"] = post[2]
+    post_obj["posted_on"] = post[3]
+    post_obj["post_author"] = post[4]
 
     return post_obj
 
@@ -51,20 +53,10 @@ def delete_post(public_id):
     else:
         return Helper.return_resp_obj("fail", "No post found.", None, 409)
 
-def update_post(public_id, data):
-    post = Post.query.filter_by(public_id=public_id).first()
-
-    post.content = data["content"]
-
-    db.session.commit()
-
-    return Helper.return_resp_obj("success", "Post updated successfully.", None, 200)
-
-
 def get_user_posts(username):
     user_id = User.query.filter_by(username=username).first().public_id
 
-    posts = db.session.query(Post.public_id, Post.content, Post.posted_on, Post.post_author, User.first_name, User.last_name).filter(User.public_id==user_id).filter(user_post_rel.c.user_username==username).filter(user_post_rel.c.public_id==Post.public_id).order_by(Post.posted_on.desc()).all()
+    posts = db.session.query(Post.public_id, Post.content, Post.photo, Post.posted_on, Post.post_author, User.first_name, User.last_name).filter(User.public_id==user_id).filter(user_post_rel.c.user_username==username).filter(user_post_rel.c.public_id==Post.public_id).order_by(Post.posted_on.desc()).all()
 
     post_list = []
 
@@ -73,8 +65,9 @@ def get_user_posts(username):
         
         post_obj["public_id"] = post[0]
         post_obj["content"] = post[1]
-        post_obj["posted_on"] = post[2]
-        post_obj["post_author"] = post[3]
+        post_obj["photo"] = post[2]
+        post_obj["posted_on"] = post[3]
+        post_obj["post_author"] = post[4]
         
         post_list.append(post_obj)
 

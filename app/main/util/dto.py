@@ -39,6 +39,8 @@ class PetDto:
         "bio" : fields.String(required=True, description="pet bio"),
         "birthday" : fields.DateTime(dt_format="rfc822", required=False, description="pet birthday"),
         "sex" : fields.String(required=True, description="pet sex"),
+        "status" : fields.Integer(required=True, description="pet giveaway status"),
+        "price" : fields.Float(required=True, description="pet price"),
         "profPhoto_filename" : fields.String(required=True, description="pet profile photo"),
         "coverPhoto_filename" : fields.String(required=True, description="pet cover photo"),
         "specie_name" : fields.String(required=True, description="pet specie"),
@@ -96,7 +98,8 @@ class PostDto:
         "public_id" : fields.String(require=True, description="post id"),
         "content" : fields.String(required=True, description="post contents"),
         "posted_on" : fields.DateTime(dt_format="rfc822", required=True, description="date posted"),
-        "post_author" : fields.String(required=True, decription="post author")
+        "post_author" : fields.String(required=True, decription="post author"),
+        "photo" : fields.String(description="post photo")
     })
 
     parser = api.parser

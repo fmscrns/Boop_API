@@ -1,5 +1,5 @@
 from .. import db, flask_bcrypt
-from app.main.models import business, circle, post, deal, request, photo
+from app.main.models import business, circle, post, deal, request
 
 user_pet_rel = db.Table("user_pet_rel",
     db.Column("user_username", db.String, db.ForeignKey("user.username", ondelete="cascade")),
@@ -59,6 +59,7 @@ class User(db.Model):
     post_rel = db.relationship("Post", secondary=user_post_rel, backref=db.backref("author", lazy=True), cascade="all, delete", passive_deletes=True)
     sale_rel = db.relationship("Deal", secondary=user_sale_rel, backref=db.backref("seller", lazy=True), cascade="all, delete", passive_deletes=True)
     comm_rel = db.relationship("Comment", secondary=user_comment_rel, backref=db.backref("commenter", lazy=True), cascade="all, delete", passive_deletes=True)
+    
     @property
     def password(self):
         raise AttributeError("password: write-only field")
