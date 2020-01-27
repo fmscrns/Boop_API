@@ -39,6 +39,8 @@ class PetDto:
         "bio" : fields.String(required=True, description="pet bio"),
         "birthday" : fields.DateTime(dt_format="rfc822", required=False, description="pet birthday"),
         "sex" : fields.String(required=True, description="pet sex"),
+        "status" : fields.Integer(required=True, description="pet giveaway status"),
+        "price" : fields.Float(required=True, description="pet price"),
         "profPhoto_filename" : fields.String(required=True, description="pet profile photo"),
         "coverPhoto_filename" : fields.String(required=True, description="pet cover photo"),
         "specie_name" : fields.String(required=True, description="pet specie"),

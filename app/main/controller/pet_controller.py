@@ -54,7 +54,7 @@ class PetOperations(Resource):
     @api.doc("update a pet", parser=parser)
     def put(self, public_id):
         post_data = request.json
-
+        
         pet = update_pet(public_id=public_id, data=post_data)
         
         if not pet:
@@ -109,7 +109,6 @@ class GetAllPosts(Resource):
         pets = get_all_pets()
 
         return pets
-
 
 @api.route("/<public_id>/transfer/<user_id>")
 @api.response(404, "Update pet owner")
