@@ -69,7 +69,7 @@ def get_user_service(username):
                                 User.first_name,
                                 User.last_name).filter(
                                     User.public_id==user.public_id).filter(
-                                        user_service_rel.c.user_username==User.username).all()
+                                        user_service_rel.c.user_username==username).all()
     
     service_list = []
 
