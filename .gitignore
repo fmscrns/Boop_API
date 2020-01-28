@@ -10,3 +10,15 @@ venv/
 thenv/
 
 .vscode/
+
+app/__pycache__/
+
+app/main/__pycache__/
+
+app/main/controller/__pycache__/
+
+app/main/models/__pycache__/
+
+app/main/services/__pycache__/
+
+app/main/util/__pycache__/

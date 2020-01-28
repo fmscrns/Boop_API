@@ -37,7 +37,7 @@ user_request_rel = db.Table("user_request_rel",
 )
 
 user_service_rel = db.Table("user_service_rel",
-    db.Column("user_id", db.String, db.ForeignKey("user.username", ondelete="cascade")),
+    db.Column("user_username", db.String, db.ForeignKey("user.username", ondelete="cascade")),
     db.Column("service_id", db.String, db.ForeignKey("service.public_id", ondelete="cascade"))
 )
 

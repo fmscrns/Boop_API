@@ -16,16 +16,11 @@ def create_service(data, username):
     new_service = Service(
         public_id = new_public_id,
         service_name = data["serviceName"],
-        days = data["days"],
-        open_time = data["openTime"],
-        close_time = data["endTime"],
-        description = data["description"],
-        service_owner = username
     )
 
     Helper.save_changes(new_service)
 
-    statement_one = user_service_rel.insert().values(user_id=username, service_id=new_public_id, service_type=data["typeID"])
+    statement_one = user_service_rel.insert().values(user_username=username, service_id=new_public_id)
 
     Helper.execute_changes(statement_one)
 
@@ -58,10 +53,6 @@ def update_service(data, public_id):
 
     if service:
         service_name = data["serviceName"],
-        days = data["days"],
-        open_time = data["openTime"],
-        close_time = data["endTime"],
-        description = data["description"]
 
         db.session.commit()
 
@@ -74,14 +65,11 @@ def get_user_service(username):
     user = User.query.filter_by(username=username).first()
 
     services = db.session.query(Service.public_id,
-                                Service.days,
-                                Service.open_time,
-                                Service.close_time,
-                                Service.description,
+                                Service.service_name,
                                 User.first_name,
                                 User.last_name).filter(
-                                    User.public_id==user).filter(
-                                        user_service_rel.c.user==User.public_id).all()
+                                    User.public_id==user.public_id).filter(
+                                        user_service_rel.c.user_username==User.username).all()
     
     service_list = []
 
@@ -90,11 +78,8 @@ def get_user_service(username):
 
         service_obj["public_id"] = service[0]
         service_obj["days"] = service[1]
-        service_obj["open_time"] = service[2]
-        service_obj["close_time"] = service[3]
-        service_obj["description"] = service[4]
-        service_obj["first_name"] = service[5]
-        service_obj["last_name"] = service[6]
+        service_obj["first_name"] = service[2]
+        service_obj["last_name"] = service[3]
 
         service_list.append(service_obj)
 

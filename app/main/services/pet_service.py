@@ -95,7 +95,14 @@ def get_user_pets(username):
                             Pet.coverPhoto_filename, 
                             Pet.pet_owner, 
                             Specie.specie_name, 
-                            Breed.breed_name).filter(User.public_id==user.public_id).filter(user_pet_rel.c.user_username==username).filter(user_pet_rel.c.pet_id==Pet.public_id).filter(pet_kind_rel.c.pet_id==user_pet_rel.c.pet_id).filter(pet_kind_rel.c.specie_id==Specie.public_id).filter(pet_kind_rel.c.breed_id==Breed.public_id).filter(Breed.specie_id==Specie.public_id).all()
+                            Breed.breed_name).filter(
+                                User.public_id==user.public_id).filter(
+                                    user_pet_rel.c.user_username==username).filter(
+                                        user_pet_rel.c.pet_id==Pet.public_id).filter(
+                                            pet_kind_rel.c.pet_id==user_pet_rel.c.pet_id).filter(
+                                                pet_kind_rel.c.specie_id==Specie.public_id).filter(
+                                                    pet_kind_rel.c.breed_id==Breed.public_id).filter(
+                                                        Breed.specie_id==Specie.public_id).all()
 
     pet_list = []
 
