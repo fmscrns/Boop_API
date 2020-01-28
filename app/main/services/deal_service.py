@@ -23,7 +23,7 @@ def new_deal(data, username, public_id):
 
     Helper.save_changes(new_deal)
 
-    statement_one = user_sale_rel.insert().values(user_id=seller.public_id, deal_id=new_public_id)
+    statement_one = user_sale_rel.insert().values(user_username=seller.username, deal_id=new_public_id)
 
     statement_two = pet_price_rel.insert().values(pet_id=pet.public_id, deal_id=new_public_id)
 
@@ -39,6 +39,7 @@ def get_all_deals():
 def get_a_deal(public_id):
     deal = db.session.query(Deal.public_id, Deal.price, Deal.posted_on, Deal.status, Deal.deal_owner, Deal.pet_id).first()
     print(deal)
+    
     deal_obj = {}
 
     deal_obj["public_id"] = deal[0]

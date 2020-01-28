@@ -68,7 +68,8 @@ class UserByEmailExistenceCheck(Resource):
     @api.doc("check user existence by email")
     def get(self):
         data = request.json
-
+        print(data)
+        print(user_by_email_existence_check(data))
         return user_by_email_existence_check(data)
 
 @api.route("/verify/username")
@@ -76,7 +77,8 @@ class UserByUsernameExistenceCheck(Resource):
     @api.doc("check user existence by username")
     def get(self):
         data = request.json
-        
+        print(data)
+        print(user_by_username_existence_check(data))
         return user_by_username_existence_check(data)    
 
 @api.route("/pet/<public_id>")

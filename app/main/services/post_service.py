@@ -7,7 +7,6 @@ from app.main.services.help import Helper
 
 def new_post(data, username):
     new_public_id = str(uuid.uuid4())
-
     new_post = Post(
         public_id = new_public_id,
         content = data["content"],
@@ -72,3 +71,40 @@ def get_user_posts(username):
         post_list.append(post_obj)
 
     return post_list
+
+def get_logged_in_post(new_request):
+    auth_token = new_request.headers.get("authorization")
+
+    if auth_token:
+        public_id_resp = Helper.decode_auth_token(auth_token)
+        
+        post = Post.query.filter_by(public_id=public_id_resp).first()
+
+        if post:
+            response_object = {
+                "status" : "success",
+                "data" : {
+                    "public_id" : post.public_id,
+                    "content" : post.content,
+                    "posted_on" : str(post.posted_on),
+                    "post_author" : post.post_author
+                }
+            }
+
+            return response_object
+
+        else:
+            response_object = {
+                "status" : "fail",
+                "message": "Provide a valid authorized token."
+            }
+
+            return response_object
+
+    else:
+        response_object = {
+            "status": "fail",
+            "message": "Provide a valid authorized token."
+        }
+
+        return response_object

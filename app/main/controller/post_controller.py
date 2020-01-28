@@ -23,6 +23,17 @@ class CreatePost(Resource):
         user_username = user[0]["data"]["username"]
 
         return new_post(data=post_data, username=user_username)
+    
+    @api.doc("get newly created post")
+    def get(self):
+        data = get_logged_in_post(request)
+
+        payload = data["data"]
+        
+        if not payload:
+            return 302
+
+        return payload
 
 @api.route("/<public_id>")
 @api.param("public_id", "post identifier")
@@ -39,7 +50,6 @@ class PostOperations(Resource):
         
         else:
             return post
-
 
     @token_required
     @api.doc("delete a post")
@@ -61,7 +71,8 @@ class GetUserPostList(Resource):
     @api.marshal_with(_post, envelope='data')
     def get(self, username):
         posts = get_user_posts(username=username)
-
+        for p in posts:
+            print(p)
         return posts
 
 @api.route("/all")

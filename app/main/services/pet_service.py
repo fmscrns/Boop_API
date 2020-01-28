@@ -8,7 +8,7 @@ from app.main.services.help import Helper
 
 def save_new_pet(data, username):
     new_public_id = str(uuid.uuid4())
-
+    
     new_pet = Pet(
         public_id = new_public_id,
         pet_name = data["petName"],
