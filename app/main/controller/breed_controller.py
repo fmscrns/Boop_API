@@ -85,7 +85,7 @@ class SpecieBreeds(Resource):
 class GetAllPosts(Resource):
     @admin_token_required
     @api.doc("get all pets")
-    @api.marshal_with(_breed, envelope='data')
+    @api.marshal_with(_breed)
     def get(self):
         pets = get_all_breeds()
 

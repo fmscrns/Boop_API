@@ -67,20 +67,20 @@ def get_user_service(username):
     services = db.session.query(Service.public_id,
                                 Service.service_name,
                                 User.first_name,
-                                User.last_name).filter(
-                                    User.public_id==user.public_id).filter(
-                                        user_service_rel.c.user_username==username).all()
+                                User.last_name).filter(user_service_rel.c.user_username==username).filter(User.username==user_service_rel.c.user_username).filter(Service.public_id==user_service_rel.c.service_id).all()
     
     service_list = []
-
-    for service in enumerate(services):
+    for x in services:
+        print("HELLO2 {}".format(x))
+    for x, service in enumerate(services):
         service_obj = {}
 
         service_obj["public_id"] = service[0]
-        service_obj["days"] = service[1]
+        service_obj["service_name"] = service[1]
         service_obj["first_name"] = service[2]
         service_obj["last_name"] = service[3]
 
         service_list.append(service_obj)
-
+    for s in service_list:
+        print("HI {}".format(s))
     return service_list

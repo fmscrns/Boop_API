@@ -63,7 +63,8 @@ class BreedDto:
 
     breed = api.model("breed", {
         "breed_name": fields.String(required=True, description="breed name"),
-        "public_id" : fields.String(require=True, description="breed public id")
+        "public_id" : fields.String(require=True, description="breed public id"),
+        "specie_id" : fields.String(require=True, description="breed specie id")
     })
 
     parser = api.parser()
@@ -149,13 +150,7 @@ class ServiceDto:
 
     service = api.model("service", {
         "public_id" : fields.String(required=True, decription="service id"),
-        "days" : fields.Date(string='Date', required=True, description="available days"),
-        "open_time" : fields.DateTime(required=True, description="opening time"),
-        "close_time" : fields.DateTime(required=True, description="closing time"),
-        "description" : fields.String(required=True, description="service description"),
-        "first_name" :  fields.String(required=True, description="user first name"), 
-        "last_name" :  fields.String(required=True, description="user last name"),
-        "service_type" : fields.String(required=True, description="service type"),
+        "service_name" : fields.String(required=True, description="service type")
     })
 
     parser = api.parser

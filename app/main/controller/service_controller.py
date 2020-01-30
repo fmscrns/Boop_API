@@ -73,7 +73,7 @@ class GetUserServiceList(Resource):
     @api.marshal_list_with(_service, envelope="data")
     def get(self, username):
         service = get_user_service(username=username)
-
+        print(service)
         return service
 
 @api.route("/all")
