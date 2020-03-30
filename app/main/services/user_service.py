@@ -47,22 +47,22 @@ def delete_user(username):
 
 def update_user(username, data):
     user = User.query.filter_by(username=username).first()
+    
     if user:
-        if User.query.filter_by(email=data["email"]).count() == 0 or User.query.filter_by(email=data["email"]).count() == 1 and user.email == data["email"]:
-            user.first_name = data["firstName"]
-            user.last_name = data["lastName"]
-            user.email = data["email"]
-            user.username = data["username"]
-            user.contact_no = data["contactNo"]
-            user.profPhoto_filename = data["profPhotoFilename"]
-            user.coverPhoto_filename = data["coverPhotoFilename"]
+        # if User.query.filter_by(email=data["email"]).count() == 0 or User.query.filter_by(email=data["email"]).count() == 1 and user.email == data["email"]:
+        # else:
+        #     return Helper.return_resp_obj("fail", "Email or username is already used.", None, 409)
 
-            db.session.commit()
+        user.first_name = data["firstName"]
+        user.last_name = data["lastName"]
+        user.contact_no = data["contactNo"]
+        user.profPhoto_filename = data["profPhotoFilename"]
+        user.coverPhoto_filename = data["coverPhotoFilename"]
 
-            return Helper.return_resp_obj("success", "User updated successfully.", None, 200)
+        db.session.commit()
 
-        else:
-            return Helper.return_resp_obj("fail", "Email or username is already used.", None, 409)
+        return Helper.return_resp_obj("success", "User updated successfully.", None, 200)
+
     else:
         return Helper.return_resp_obj("fail", "No user found.", None, 409)
 
