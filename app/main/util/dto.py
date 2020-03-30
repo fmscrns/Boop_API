@@ -65,7 +65,8 @@ class BreedDto:
 
     breed = api.model("breed", {
         "breed_name": fields.String(required=True, description="breed name"),
-        "public_id" : fields.String(require=True, description="breed public id")
+        "public_id" : fields.String(require=True, description="breed public id"),
+        "specie_id" : fields.String(require=True, description="breed specie id")
     })
 
     parser = api.parser()
@@ -142,6 +143,26 @@ class RequestDto:
         "status" : fields.String(required=True, decription="request status"),
         "deal_id" : fields.String(required=True, decription="deal id"),
         "requester_id" : fields.String(required=True, decription="request owner id"),
+    })
+
+    parser = api.parser
+
+class ServiceDto:
+    api = Namespace("services", description="service operations")
+
+    service = api.model("service", {
+        "public_id" : fields.String(required=True, decription="service id"),
+        "service_name" : fields.String(required=True, description="service type")
+    })
+
+    parser = api.parser
+
+class ServiceTypeDto:
+    api = Namespace("service types", description="service types operations")
+
+    service_type = api.model("service_type",{
+        "public_id" : fields.String(required=True, decription="service id"),
+        "service_type" : fields.String(required=True, description="service type description")
     })
 
     parser = api.parser

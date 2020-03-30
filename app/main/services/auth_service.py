@@ -7,7 +7,6 @@ from app.main.services.help import Helper
 def login_user(data):
     try:
         user = User.query.filter_by(email=data.get("usernameOrEmail")).first()
-        print(user)
 
         if user and user.check_password(data.get("password")):
             auth_token = Helper.encode_auth_token(user.public_id)
@@ -17,13 +16,12 @@ def login_user(data):
 
         elif user is None:
             user = User.query.filter_by(username=data.get("usernameOrEmail")).first()
-
+            
             if user and user.check_password(data.get("password")):
                 auth_token = Helper.encode_auth_token(user.public_id)
 
                 if auth_token:
                     return Helper.return_resp_obj("success", "Successfully logged in.", auth_token, 200)
-
             else:
                 return Helper.return_resp_obj("fail", "Log in unsuccessful. Try again.", None, 401)
 
