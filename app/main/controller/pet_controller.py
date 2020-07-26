@@ -1,124 +1,57 @@
 from flask import request
 from flask_restplus import Resource
+from ..util.decorator import auth_token_required
+from ..services.user_service import UserService
+from ..services.pet_service import PetService
 from ..util.dto import PetDto
-from ..util.decorator import token_required, admin_token_required
-from ..models.user import User
-from ..services.user_service import get_logged_in_user
-from ..services.pet_service import *
-from ..services.help import Helper
 
 api = PetDto.api
-_pet = PetDto.pet
-parser = PetDto.parser
+get_pet_dto = PetDto.get_pet
+create_pet_dto = PetDto.create_pet
+update_pet_dto = PetDto.update_pet
 
 @api.route("/")
-class PostPet(Resource):
-    @token_required
-    @api.response(201, "Pet successfully created.")
-    @api.doc("register a pet", parser=parser)
+class PetList(Resource):
+    @auth_token_required
+    @api.doc("create pet")
+    @api.expect(create_pet_dto, validate=True)
     def post(self):
+        authorization_header = request.headers.get("Authorization")
         post_data = request.json
 
-        resp_data, status = get_logged_in_user(request)
-        
-        return save_new_pet(data=post_data, username=resp_data["data"]["username"])
+        return PetService.create_pet(authorization_header.split(" ")[1], post_data)
 
-@api.route("/<public_id>")
-@api.param("public_id", "The Pet identifier")
-@api.response(404, "Pet not found.")
-class PetOperations(Resource):
-    @token_required
-    @api.doc("get a pet")
-    @api.marshal_with(_pet)
-    def get(self, public_id):
-        pet = get_a_pet(public_id)
+@api.route("/user/<username>/pets/page/<pagination_no>")
+@api.param("username", "user identifier")
+@api.param("pagination_no", "pagination number")
+class UserPetList(Resource):
+    @auth_token_required
+    @api.doc("get pets of a user")
+    @api.marshal_list_with(get_pet_dto, envelope="data")
+    def get(self, username, pagination_no):
+        return PetService.get_user_pets(username, int(pagination_no))
 
-        if not pet:
-            api.abort(404)
+@api.route("/pet/<pet_id>")
+@api.param("pet_id", "pet identifier")
+class Pet(Resource):
+    @auth_token_required
+    @api.doc("get pet")
+    @api.marshal_with(get_pet_dto, skip_none=True)
+    def get(self, pet_id):
+        return PetService.get_pet(pet_id)
 
-        else:
-            return pet
-
-    @token_required
-    @api.doc("delete a pet")
-    def delete(self, public_id):
-        pet = delete_pet(public_id)
-
-        if not pet:
-            api.abort(404)
-            
-        else:
-            return pet
-
-    @token_required
-    @api.doc("update a pet", parser=parser)
-    def put(self, public_id):
+    @auth_token_required
+    @api.doc("update a pet")
+    @api.expect(update_pet_dto, validate=True)
+    def put(self, pet_id):
+        authorization_header = request.headers.get("Authorization")
         post_data = request.json
-        
-        pet = update_pet(public_id=public_id, data=post_data)
-        
-        if not pet:
-            api.abort(404)
 
-        else:
-            return pet
+        return PetService.update_pet(authorization_header.split(" ")[1], pet_id, post_data)
 
-@api.route("/user/<username>")
-@api.param("username", "Pets of a specific owner")
-@api.response(404, "Pets not found.")
-class GetUserPetList(Resource):
-    @token_required
-    @api.doc("get pets with specific owner")
-    @api.marshal_list_with(_pet, envelope="data")
-    def get(self, username):
-        pets = get_user_pets(username=username)
+    @auth_token_required
+    @api.doc("delete pet")
+    def delete(self, pet_id):
+        authorization_header = request.headers.get("Authorization")
 
-        return pets
-
-@api.route("/specie/<specie_id>")
-@api.param("specie_id", "Pets with specific specie")
-@api.response(404, "Pets not found.")
-class GetSpeciePetList(Resource):
-    @token_required
-    @api.doc("get pets with specific specie")
-    @api.marshal_list_with(_pet, envelope="data")
-    def get(self, specie_id):
-        pets = get_specie_pets(specie_id=specie_id)
-
-        return pets
-
-@api.route("/breed/<breed_id>")
-@api.param("breed_id", "Pets with specific breed")
-@api.response(404, "Pets not found.")
-class GetBreedPetList(Resource):
-    @token_required
-    @api.doc("get pets with specific breed")
-    @api.marshal_list_with(_pet, envelope="data")
-    def get(self, breed_id):
-        pets = get_breed_pets(breed_id=breed_id)
-
-        return pets
-
-@api.route("/all")
-@api.response(404, "pets not found")
-class GetAllPosts(Resource):
-    @admin_token_required
-    @api.doc("get all pets")
-    @api.marshal_with(_pet, envelope='data')
-    def get(self):
-        pets = get_all_pets()
-
-        return pets
-
-@api.route("/<public_id>/transfer/<user_id>")
-@api.response(404, "Update pet owner")
-class PetTransfer(Resource):
-    @token_required
-    def put(self, public_id, user_id):
-
-        user = User.query.filter_by(public_id=user_id).first()
-
-        pet = pet_transfer(public_id=public_id, new_owner_id=user.public_id)
-
-        return pet
-
+        return PetService.delete_pet(authorization_header.split(" ")[1], pet_id)

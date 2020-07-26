@@ -1,49 +1,40 @@
 import uuid
 
 from app.main import db
-from app.main.models.specie import Specie
-from app.main.services.help import Helper
+from app.main.models.specie_model import SpecieModel
 
-def new_specie(data):
-    new_public_id = str(uuid.uuid4())
+class SpecieService:
+    @staticmethod
+    def get_all_species():
+        try:
+            return SpecieModel.query.all()
 
-    new_specie = Specie(
-        public_id = new_public_id,
-        specie_name = data["specieName"]
-    )
+        except Exception:
+            return None
 
-    Helper.save_changes(new_specie)
+    @staticmethod
+    def create_specie(post_data):
+        try:
+            new_public_id = str(uuid.uuid4())
 
-    return Helper.generate_token("Specie", new_specie)
+            new_specie = SpecieModel(
+                public_id = new_public_id,
+                name = post_data["name"]
+            )
 
-def get_all_species():
-    return Specie.query.all()
+            db.session.add(new_specie)
 
-def get_a_specie(public_id):
-    return Specie.query.filter_by(public_id=public_id).first()
+            db.session.commit()
 
-def delete_specie(public_id):
-    specie = Specie.query.filter_by(public_id=public_id).first()
+            return new_public_id
 
-    if specie:
-        db.session.delete(specie)
+        except Exception:
+            return None
 
-        db.session.commit()
+    @staticmethod
+    def get_specie(specie_id):
+        try:
+            return SpecieModel.query.filter_by(public_id=specie_id).first()
 
-        return Helper.return_resp_obj("success", "Specie delete successfully.", None, 200)
-
-    else:
-        return Helper.return_resp_obj("fail", "No specie found.", None, 409)
-
-def edit_specie(public_id, data):
-    specie = Specie.query.filter_by(public_id=public_id).first()
-
-    if specie:
-        specie.specie_name = data["specieName"]
-
-        db.session.commit()
-
-        return Helper.return_resp_obj("success", "Specie updated successfully.", None, 200)
-
-    else:
-        return Helper.return_resp_obj("fail", "No specie found.", None, 409)
+        except Exception:
+            return None

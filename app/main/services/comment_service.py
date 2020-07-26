@@ -1,73 +1,47 @@
 import uuid, datetime
 
 from app.main import db
-from app.main.models.user import User, user_comment_rel
-from app.main.models.post import Post
-from app.main.models.comment import Comment, comment_post_rel
-from app.main.services.help import Helper
+from app.main.models.post_model import PostModel
+from app.main.models.comment_model import CommentModel
 
-def new_comment(data, username, public_id):
-    new_public_id = str(uuid.uuid4())
+class CommentService:
+    @staticmethod
+    def create_comment(auth_token, post_data):
+        try:
+            get_current_user = UserService.get_current_user(auth_token)
+            get_post_row = PostModel.query_filter_by(public_id=post_data["post_id"]).first()
 
-    post = Post.query.filter_by(public_id=public_id).first()
+            new_comment = CommentModel(
+                public_id = str(uuid.uuid4()),
+                content = data["content"],
+                created_on = datetime.datetime.utcnow(),
+                user_creates_comments_rel = get_current_user.username,
+                post_has_comments_rel = get_post_row.public_id
+            )
 
-    new_comment = Comment(
-        public_id = new_public_id,
-        posted_on = datetime.datetime.utcnow(),
-        comment = data["comment"],
-        posted_by = username,
-        post_id = post.public_id
-    )
+            db.session.add(new_comment)
 
-    Helper.save_changes(new_comment)
+            db.session.commit()
 
-    statement_one = user_comment_rel.insert().values(user_username=username, comm_id=new_public_id)
+            return 200
 
-    statement_two = comment_post_rel.insert().values(post_id=post.public_id, comm_id=new_public_id)
+        except Exception:
+            return None
 
-    Helper.execute_changes(statement_one)
+    @staticmethod
+    def get_post_comments(post_id, pagination_no):
+        try:
+            return CommentModel.query.filter_by(post_id=post_id).paginate(page=pagination_no, per_page=6)
 
-    Helper.execute_changes(statement_two)
+        except Exception:
+            return None
 
-    return Helper.generate_token("Comment", new_comment)
+    @staticmethod
+    def get_comment(comment_id):
+        try:
+            return CommentModel.query.filter_by(public_id=comment_id).first()
 
-def get_all_comments():
-    return Comment.query.all()
+        except Exception:
+            return None
 
-def get_a_comment(public_id):
-    comment = Comment.query.filter_by(public_id=public_id).first()
-
-    return comment
-
-def delete_comment(public_id):
-    comm = Comment.query.filter_by(public_id=public_id).first()
-
-    if comm:
-        db.session.delete(comm)
-
-        db.session.commit()
-        
-        return Helper.return_resp_obj("success", "Comment deleted successfully.", None, 200)
-
-    else:
-        return Helper.return_resp_obj("fail", "No comment found.", None, 409)
-
-def edit_comment(public_id, data):
-    comm = Comment.query.filter_by(public_id=public_id).first()
-
-    if comm:
-        comm.comment = data["comment"]
-        comm.posted_on = datetime.datetime.utcnow()
-
-        db.session.commit()
-
-        return Helper.return_resp_obj("success", "Comment updated successfully.", None, 200)
-
-    else:
-        return Helper.return_resp_obj("fail", "No comment found.", None, 409)
-
-
-def get_post_rel_comment(public_id):
-    comments = Comment.query.filter_by(post_id=public_id).all()
     
-    return comments
