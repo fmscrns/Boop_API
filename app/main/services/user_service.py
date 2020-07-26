@@ -1,146 +1,68 @@
 import datetime, uuid
 from app.main import db
-from app.main.models.user import User, user_pet_rel
-from app.main.services.help import Helper
+from app.main.models.user_model import UserModel
 
-def save_new_user(data):
-    user = User.query.filter_by(email=data["email"]).first()
+class UserService:
+    @staticmethod
+    def create_user(post_data):
+        try:
+            get_user_row_by_username = UserModel.query.filter_by(username=post_data["username"]).first()
+            get_user_row_by_email_address = UserModel.query.filter_by(email_address=post_data["email_address"]).first()
 
-    if not user:
-        new_user = User(
-            public_id = str(uuid.uuid4()),
-            first_name = data["firstName"],
-            last_name = data["lastName"],
-            email = data["email"],
-            username = data["username"],
-            password = data["password"],
-            contact_no = data["contactNo"],
-            registered_on = datetime.datetime.utcnow(),
-            admin = False
-        )
+            if not (get_user_row_by_username or get_user_row_by_email_address):
+                new_username = post_data["username"]
 
-        Helper.save_changes(new_user)
+                new_user = UserModel(
+                    is_admin = False,
+                    username = new_username,
+                    first_name = post_data["first_name"],
+                    last_name = post_data["last_name"],
+                    email_address = post_data["email_address"],
+                    password = post_data["password"],
+                    contact_no = post_data["contact_no"],
+                    registered_on = datetime.datetime.utcnow()
+                )
 
-        return Helper.generate_token("User", new_user)
+                db.session.add(new_user)
 
-    else:
-        return Helper.return_resp_obj("fail", "User already exists. Please log in instead.", None, 409)
+                db.session.commit()
 
-def get_all_users():
-    return User.query.all()
+                return UserModel.encode_auth_token(new_username).decode()
 
-def get_a_user(username):
-    return User.query.filter_by(username=username).first()
+        except Exception as e:
+            return None
 
-def delete_user(username):
-    user = User.query.filter_by(username=username).first()
+    @staticmethod
+    def get_user(username_or_email_address):
+        try:
+            return UserModel.query.filter_by(username=username_or_email_address).first() or UserModel.query.filter_by(email_address=username_or_email_address).first()
 
-    if user:
-        db.session.delete(user)
+        except Exception as e:
+            return None
+            
+    @staticmethod
+    def get_current_user(auth_token):
+        try:
+            return UserModel.query.filter_by(username=UserModel.decode_auth_token(auth_token)).first()
 
-        db.session.commit()
+        except Exception as e:
+            return None
 
-        return Helper.return_resp_obj("success", "User deleted successfully.", None, 200)
+    @staticmethod
+    def update_current_user(auth_token, post_data):
+        try:
+            get_current_user = UserService.get_current_user(auth_token)
 
-    else:
-        return Helper.return_resp_obj("fail", "No user found.", None, 409)
+            get_current_user.first_name = post_data["first_name"]
+            get_current_user.last_name = post_data["last_name"]
+            get_current_user.bio = post_data["bio"]
+            get_current_user.contact_no = post_data["contact_no"]
+            get_current_user.profile_photo_fn = post_data["profile_photo_fn"]
+            get_current_user.cover_photo_fn = post_data["cover_photo_fn"]
 
-def update_user(username, data):
-    user = User.query.filter_by(username=username).first()
-    
-    if user:
-        # if User.query.filter_by(email=data["email"]).count() == 0 or User.query.filter_by(email=data["email"]).count() == 1 and user.email == data["email"]:
-        # else:
-        #     return Helper.return_resp_obj("fail", "Email or username is already used.", None, 409)
+            db.session.commit()
 
-        user.first_name = data["firstName"]
-        user.last_name = data["lastName"]
-        user.contact_no = data["contactNo"]
-        user.profPhoto_filename = data["profPhotoFilename"]
-        user.coverPhoto_filename = data["coverPhotoFilename"]
+            return 200
 
-        db.session.commit()
-
-        return Helper.return_resp_obj("success", "User updated successfully.", None, 200)
-
-    else:
-        return Helper.return_resp_obj("fail", "No user found.", None, 409)
-
-def user_by_email_existence_check(data):
-    user = User.query.filter_by(email=data.get("email")).first()
-
-    if user:
-        return Helper.return_resp_obj("success", "This user exists.", None, 409)
-
-    else:
-        return Helper.return_resp_obj("fail", "This user does not exist.", None, 200)
-
-def user_by_username_existence_check(data):
-    user = User.query.filter_by(username=data.get("username")).first()
-
-    if user:
-        return Helper.return_resp_obj("success", "This user exists.", None, 409)   
-
-    else:
-        return Helper.return_resp_obj("fail", "This user does not exist.", None, 200)
-
-def get_logged_in_user(new_request):
-    auth_token = new_request.headers.get("authorization")
-
-    if auth_token:
-        public_id_resp = Helper.decode_auth_token(auth_token)
-        
-        user = User.query.filter_by(public_id=public_id_resp).first()
-
-        if user:
-            response_object = {
-                "status" : "success",
-                "data" : {
-                    "firstName" : user.first_name,
-                    "lastName" : user.last_name,
-                    "email" : user.email,
-                    "username" : user.username,
-                    "contactNo" : user.contact_no,
-                    "admin" : user.admin,
-                    "profPhotoFilename" : user.profPhoto_filename,
-                    "coverPhotoFilename" : user.coverPhoto_filename,
-                    "registeredOn" : str(user.registered_on)
-                }
-            }
-
-            return response_object, 200
-
-        else:
-            response_object = {
-                "status" : "fail",
-                "message": "Provide a valid authorized token."
-            }
-
-            return response_object, 401
-
-    else:
-        response_object = {
-            "status": "fail",
-            "message": "Provide a valid authorized token."
-        }
-
-        return response_object, 401
-
-def get_pet_owners(public_id):
-    users = db.session.query(User.first_name, User.last_name, User.bio, User.email, User.username, User.contact_no).filter(user_pet_rel.c.user_username==User.username).filter(user_pet_rel.c.pet_id==public_id).all()
-
-    user_list = []
-    
-    for x, user in enumerate(users):
-        user_obj = {}
-        
-        user_obj["first_name"] = user[0]
-        user_obj["last_name"] = user[1]
-        user_obj["bio"] = user[2]
-        user_obj["email"] = user[3]
-        user_obj["username"] = user[4]
-        user_obj["contact_no"] = user[5]
-
-        user_list.append(user_obj)
-
-    return user_list
+        except Exception as e:
+            return None

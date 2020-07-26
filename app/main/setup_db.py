@@ -1,7 +1,7 @@
 import uuid, getpass
 from app.main import db
-from app.main.models.specie import Specie
-from app.main.models.breed import Breed
+from app.main.models.specie_model import SpecieModel
+from app.main.models.breed_model import BreedModel
 
 def generate_id():
     new_id = str(uuid.uuid4())
@@ -56,13 +56,20 @@ def setup_petKindList():
             breed_list.append(breed_obj)
 
     for count, specie in enumerate(specie_list):
-        specie = Specie(specie_name=specie["specie_name"], public_id=specie["public_id"])
+        specie = SpecieModel(
+            name=specie["specie_name"],
+            public_id=specie["public_id"]
+        )
             
         db.session.add(specie)
         db.session.commit()
 
     for count, breed in enumerate(breed_list):
-        breed = Breed(breed_name=breed["breed_name"], public_id=breed["public_id"], specie_id=breed["specie_id"])
+        breed = BreedModel(
+            name=breed["breed_name"],
+            public_id=breed["public_id"],
+            specie_has_breeds_rel=breed["specie_id"]
+        )
 
         db.session.add(breed)
         db.session.commit()

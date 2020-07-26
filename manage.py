@@ -5,8 +5,8 @@ from flask_script import Manager
 from app import blueprint
 from app.main import create_app, db
 from app.main.setup_db import setup_petKindList
-from app.main.models.specie import Specie
-from app.main.models.breed import Breed
+from app.main.models.specie_model import SpecieModel
+from app.main.models.breed_model import BreedModel
 
 app = create_app("dev")
 app.register_blueprint(blueprint)
@@ -32,7 +32,7 @@ def populate_db():
                 print("Read carefully and input what is required. Try again.")
 
     except exc.OperationalError:
-        print("Create the databases first.")
+        print("Create or turn on the databases first.")
 
     except exc.ProgrammingError:
         print("Please migrate your models to the databases.")
@@ -40,8 +40,8 @@ def populate_db():
 @manager.command
 def run():
     try:
-        x = db.session.query(func.count(Specie.id)).scalar()
-        y = db.session.query(func.count(Breed.id)).scalar()
+        x = db.session.query(func.count(SpecieModel.id)).scalar()
+        y = db.session.query(func.count(BreedModel.id)).scalar()
 
         if x and y != 0:
             app.run()
@@ -55,7 +55,7 @@ def run():
                 print("Read carefully and input what is required. Try again.")
 
     except exc.OperationalError:
-        print("Create the databases first.")
+        print("Create or turn on the databases first.")
 
     except exc.ProgrammingError:
         print("Please migrate your models to the databases.")

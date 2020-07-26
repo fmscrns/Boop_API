@@ -1,29 +1,28 @@
 from flask import request
 from flask_restplus import Resource
-
-from app.main.services.auth_service import login_user, logout_user
+from ..util.decorator import auth_token_required
+from app.main.services.auth_service import AuthService
 from ..util.dto import AuthDto
-from ..util.decorator import token_required
 
 api = AuthDto.api
-user_auth = AuthDto.user_auth
-parser = AuthDto.parser
-
+provide_auth_token_dto = AuthDto.provide_auth_token
 
 @api.route("/login")
-class UserLogin(Resource):
-    @api.doc("user login", parser=parser)
+class Login(Resource):
+    @api.doc("log in a user")
+    @api.expect(provide_auth_token_dto, validate=True)
     def post(self):
         post_data = request.json
 
-        return login_user(data=post_data)
+        if post_data:
+            return AuthService.provide_auth_token(post_data)
 
-
-@token_required
 @api.route("/logout")
-class LogoutAPI(Resource):
-    @api.doc("logout a user")
+class Logout(Resource):
+    @auth_token_required
+    @api.doc("log out a user")
     def post(self):
-        post_data = request.headers.get("authorization")
+        authorization_header = request.headers.get("Authorization")
 
-        return logout_user(data=post_data)
+        return AuthService.dispose_auth_token(authorization_header.split(" ")[1])
+

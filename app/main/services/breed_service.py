@@ -1,55 +1,43 @@
 import uuid
 
 from app.main import db
-from app.main.models.breed import Breed
-from app.main.models.specie import Specie
-from app.main.services.help import Helper
+from app.main.models.specie_model import SpecieModel
+from app.main.models.breed_model import BreedModel
 
-def new_breed(data, public_id):
-    new_public_id = str(uuid.uuid4())
+class BreedService:
+    @staticmethod
+    def create_breed(post_data):
+        try:
+            get_specie_row = SpecieModel.query.filter_by(public_id=post_data["specie_id"]).first()
 
-    specie = Specie.query.filter_by(public_id=public_id).first()
+            new_breed = BreedModel(
+                public_id = str(uuid.uuid4()),
+                name = post_data["name"],
+                specie_has_breeds_rel = get_specie_row.public_id
+            )
 
-    new_breed = Breed(
-        public_id = new_public_id,
-        breed_name = data["breedName"],
-        specie_id = specie.public_id
-    )
+            db.session.add(new_breed)
 
-    Helper.save_changes(new_breed)
+            db.session.commit()
 
-    return Helper.generate_token("Breed", new_breed)
+            return 200
 
-def get_specie_breeds(specie_id):
-    return Breed.query.filter_by(specie_id=specie_id).all()
+        except Exception:
+            return None
 
-def get_a_breed(public_id):
-    return Breed.query.filter_by(public_id=public_id).first()
+    @staticmethod
+    def get_specie_breeds(specie_id):
+        try:
+            return BreedModel.query.filter_by(specie_has_breeds_rel=specie_id).all()
 
-def get_all_breeds():
-    return Breed.query.all()
+        except Exception:
+            return None
 
-def delete_breed(public_id):
-    breed = Breed.query.filter_by(public_id=public_id).first()
 
-    if breed:
-        db.session.delete(breed)
-        db.session.commit()
+    @staticmethod
+    def get_breed(breed_id):
+        try:
+            return BreedModel.query.filter_by(public_id=breed_id).first()
 
-        return Helper.return_resp_obj("success", "Breed deleted successfully.", None, 200)
-
-    else:
-        return Helper.return_resp_obj("fail", "No breed found.", None, 409)
-
-def edit_breed(public_id, data):
-    breed = Breed.query.filter_by(public_id=public_id).first()
-
-    if breed:
-        breed.breed_name = data["breedName"]
-
-        db.session.commit()
-
-        return Helper.return_resp_obj("success", "Breed updated successfully.", None, 200)
-
-    else:
-        return Helper.return_resp_obj("fail", "No breed found.", None, 409)
+        except Exception:
+            return None

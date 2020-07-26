@@ -1,67 +1,34 @@
 from flask import request
 from flask_restplus import Resource
+from ..util.decorator import auth_token_required
+from ..services.specie_service import SpecieService
 from ..util.dto import SpecieDto
-from ..util.decorator import token_required, admin_token_required
-from ..services.specie_service import *
 
 api = SpecieDto.api
-_specie = SpecieDto.specie
-parser = SpecieDto.parser
+get_specie_dto = SpecieDto.get_specie
+create_specie_dto = SpecieDto.create_specie
 
 @api.route("/")
-class NewSpecie(Resource):
-    @admin_token_required
-    @api.response(201, "Specie added")
-    @api.doc("add a new specie", parser=parser)
-    def post(self):
-        specie_data = request.json
-
-        return new_specie(data=specie_data)
-
-@api.route("/all")
 class SpecieList(Resource):
-    @token_required
-    @api.doc("show list of all registered species")
-    @api.marshal_list_with(_specie, envelope="data")
+    @auth_token_required
+    @api.doc("get all species")
+    @api.marshal_list_with(get_specie_dto, envelope="data", skip_none=True)
     def get(self):
-        return get_all_species()
+        return SpecieService.get_all_species()
 
-@api.route("/<public_id>")
-@api.param("public_id", "The Specie identifier")
-@api.response(404, "Specie not found.")
-class SpecieOperations(Resource):
-    @admin_token_required
-    @api.doc("get a specie")
-    @api.marshal_with(_specie)
-    def get(self, public_id):
-        specie = get_a_specie(public_id)
+    @auth_token_required
+    @api.doc("create specie")
+    @api.expect(create_specie_dto, validate=True)
+    def post(self):
+        post_data = request.json
 
-        if not specie:
-            api.abort(404)
+        return SpecieService.create_specie(post_data)
 
-        else:
-            return specie
-
-    @admin_token_required
-    @api.doc("delete specie")
-    def delete(self, public_id):
-        specie = delete_specie(public_id)
-
-        if not specie:
-            api.abort(404)
-
-        else:
-            return specie
-    
-    @admin_token_required
-    @api.doc("update specie")
-    def put(self, public_id):
-        specie_data = request.json
-
-        specie = edit_specie(public_id=public_id, data=specie_data)
-
-        if not specie:
-            api.abort(404)
-
-        else:
-            return specie
+@api.route("/specie/<specie_id>")
+@api.param("specie_id", "specie identifier")
+class Specie(Resource):
+    @auth_token_required
+    @api.doc("get specie")
+    @api.marshal_with(get_specie_dto, skip_none=True)
+    def get(self, specie_id):
+        return SpecieService.get_specie(specie_id)
