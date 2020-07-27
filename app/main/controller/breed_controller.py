@@ -28,16 +28,6 @@ class SpecieBreedList(Resource):
     def get(self, specie_id):
         return BreedService.get_specie_breeds(specie_id)
 
-<<<<<<< HEAD
-@api.route("/all")
-@api.response(404, "pets not found")
-class GetAllPosts(Resource):
-    @admin_token_required
-    @api.doc("get all pets")
-    @api.marshal_with(_breed)
-    def get(self):
-        pets = get_all_breeds()
-=======
 @api.route("/breed/<breed_id>")
 @api.param("breed_id", "breed identifier")
 class Breed(Resource):
@@ -46,5 +36,4 @@ class Breed(Resource):
     @api.marshal_with(get_breed_dto, skip_none=True)
     def get(self, breed_id):
         return BreedService.get_breed(breed_id)
->>>>>>> master
 

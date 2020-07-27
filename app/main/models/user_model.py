@@ -21,9 +21,11 @@ class UserModel(db.Model):
     password_hash = db.Column(db.String(100), nullable=False)
     contact_no = db.Column(db.String(20), nullable=True)
     registered_on = db.Column(db.DateTime, nullable=False)
-    user_creates_posts_rel = db.relationship("PostModel", backref="user", lazy=True)
-    user_creates_comments_rel = db.relationship("CommentModel", backref="user", lazy=True)
 
+    post_creator_rel = db.relationship("PostModel", backref="creator", lazy=True)
+    comment_creator_rel = db.relationship("CommentModel", backref="creator", lazy=True)
+    friendship_sender_rel = db.relationship("UserFriendListModel", backref="sender", lazy=True)
+    friendship_recipient_rel = db.relationship("UserFriendListModel", backref="recipient", lazy=True)
     @property
     def password(self):
         raise AttributeError("password: write-only field")

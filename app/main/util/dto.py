@@ -71,12 +71,6 @@ class PetDto:
         "breed_kind" : fields.String(required=True, description="breed name")
     })
 
-<<<<<<< HEAD
-    breed = api.model("breed", {
-        "breed_name": fields.String(required=True, description="breed name"),
-        "public_id" : fields.String(require=True, description="breed public id"),
-        "specie_id" : fields.String(require=True, description="breed specie id")
-=======
     create_pet = api.model("create pet", {
         "name" : fields.String(required=True, description="name"),
         "bio" : fields.String(required=True, description="biography"),
@@ -87,7 +81,6 @@ class PetDto:
         "cover_photo_fn" : fields.String(required=True, description="cover photo"),
         "specie_id" : fields.String(required=True, description="specie public identifier"),
         "breed_id" : fields.String(required=True, description="breed public identifier")
->>>>>>> master
     })
 
     update_pet = api.model("update pet", {
@@ -149,35 +142,11 @@ class CommentDto:
         "public_id" : fields.String(required=True, description="public identifier"),
         "content" : fields.String(required=True, description="content"),
         "created_on" : fields.DateTime(required=True, description="creation date"),
-        "user_id" : fields.String(required=True, decription="user public identifier"),
-        "post_id" : fields.String(required=True, decription="post public identifier")
+        "user_creator" : fields.String(required=True, decription="user public identifier"),
+        "post_parent" : fields.String(required=True, decription="post public identifier")
     })
 
-<<<<<<< HEAD
-    parser = api.parser
-
-class ServiceDto:
-    api = Namespace("services", description="service operations")
-
-    service = api.model("service", {
-        "public_id" : fields.String(required=True, decription="service id"),
-        "service_name" : fields.String(required=True, description="service type")
-    })
-
-    parser = api.parser
-
-class ServiceTypeDto:
-    api = Namespace("service types", description="service types operations")
-
-    service_type = api.model("service_type",{
-        "public_id" : fields.String(required=True, decription="service id"),
-        "service_type" : fields.String(required=True, description="service type description")
-    })
-
-    parser = api.parser
-=======
     create_comment = api.model("create comment", {
         "content" : fields.String(required=True, description="content"),
         "post_id" : fields.String(required=True, decription="post public identifier")
     })
->>>>>>> master

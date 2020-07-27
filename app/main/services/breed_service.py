@@ -13,7 +13,7 @@ class BreedService:
             new_breed = BreedModel(
                 public_id = str(uuid.uuid4()),
                 name = post_data["name"],
-                specie_has_breeds_rel = get_specie_row.public_id
+                parent_specie_id = get_specie_row.public_id
             )
 
             db.session.add(new_breed)
@@ -28,7 +28,7 @@ class BreedService:
     @staticmethod
     def get_specie_breeds(specie_id):
         try:
-            return BreedModel.query.filter_by(specie_has_breeds_rel=specie_id).all()
+            return BreedModel.query.filter_by(parent_specie_id=specie_id).all()
 
         except Exception:
             return None

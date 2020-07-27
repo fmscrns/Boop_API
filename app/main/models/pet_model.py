@@ -16,9 +16,9 @@ class PetModel(db.Model):
     profile_photo_fn = db.Column(db.String(50), default="pet-default-profile-photo.jpg", nullable=False)
     cover_photo_fn = db.Column(db.String(50), default="pet-default-cover-photo.jpg", nullable=False)
     registered_on = db.Column(db.DateTime, nullable=False)
-    user_creates_pet_rel = db.Column(db.String, db.ForeignKey("user.username"), nullable=False)
-    pet_has_specie_rel = db.Column(db.String, db.ForeignKey("specie.public_id"), nullable=False)
-    pet_has_breed_rel = db.Column(db.String, db.ForeignKey("breed.public_id"), nullable=False)
+    owner_user_username = db.Column(db.String, db.ForeignKey("user.username"), nullable=False)
+    specie_id = db.Column(db.String, db.ForeignKey("specie.public_id"), nullable=False)
+    breed_id = db.Column(db.String, db.ForeignKey("breed.public_id"), nullable=False)
  
     def __repr__(self):
         return "<pet '{}'>".format(self.name)

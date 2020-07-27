@@ -10,8 +10,9 @@ class PostModel(db.Model):
     content = db.Column(db.String(300), nullable=False)
     photo_fn = db.Column(db.String(50))
     created_on = db.Column(db.DateTime, nullable=False)
-    user_creates_posts_rel = db.Column(db.String, db.ForeignKey("user.username"), nullable=False)
-    post_has_comments_rel = db.relationship("CommentModel", backref="post", lazy=True)
+    creator_user_id = db.Column(db.String, db.ForeignKey("user.username"), nullable=False)
+
+    comment_parent_rel = db.relationship("CommentModel", backref="post", lazy=True)
     
     def __repr__(self):
         return "<post '{}'>".format(self.public_id)
