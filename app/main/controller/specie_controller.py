@@ -1,8 +1,8 @@
 from flask import request
 from flask_restplus import Resource
-from ..util.decorator import auth_token_required
-from ..services.specie_service import SpecieService
-from ..util.dto import SpecieDto
+from app.main.util.decorator import auth_token_required
+from app.main.services.specie_service import SpecieService
+from app.main.util.dto import SpecieDto
 
 api = SpecieDto.api
 get_specie_dto = SpecieDto.get_specie
@@ -12,7 +12,7 @@ create_specie_dto = SpecieDto.create_specie
 class SpecieList(Resource):
     @auth_token_required
     @api.doc("get all species")
-    @api.marshal_list_with(get_specie_dto, envelope="data", skip_none=True)
+    @api.marshal_list_with(get_specie_dto, envelope="data")
     def get(self):
         return SpecieService.get_all_species()
 

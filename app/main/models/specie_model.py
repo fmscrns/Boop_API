@@ -1,6 +1,6 @@
-from .. import db
-from app.main.models import pet_model
-from app.main.models import breed_model
+from app.main import db
+from app.main.models.pet_model import PetModel
+from app.main.models.breed_model import BreedModel
 
 class SpecieModel(db.Model):
     __tablename__ = "specie"
@@ -9,8 +9,8 @@ class SpecieModel(db.Model):
     public_id = db.Column(db.String(100), unique=True, nullable=False)
     name = db.Column(db.String(50), unique=True, nullable=False)
 
-    pet_specie_rel = db.relationship("PetModel", backref="specie", lazy=True)
-    breed_parent_rel = db.relationship("BreedModel", backref="specie", lazy=True)
+    pet_group_rel = db.relationship("PetModel", backref="group", lazy=True)
+    breed_parent_rel = db.relationship("BreedModel", backref="parent", lazy=True)
 
     def __repr__(self):
         return "<specie '{}'>".format(self.public_id)

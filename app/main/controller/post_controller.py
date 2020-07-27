@@ -1,9 +1,8 @@
 from flask import request
 from flask_restplus import Resource
-from ..util.decorator import auth_token_required
-from ..services.user_service import UserService
-from ..services.post_service import PostService
-from ..util.dto import PostDto
+from app.main.util.decorator import auth_token_required
+from app.main.services.post_service import PostService
+from app.main.util.dto import PostDto
 
 api = PostDto.api
 get_post_dto = PostDto.get_post
@@ -25,7 +24,7 @@ class PostList(Resource):
 @api.param("pagination_no", "pagination number")
 class UserPostList(Resource):
     @auth_token_required
-    @api.doc("get posts of a user")
+    @api.doc("get user posts")
     @api.marshal_with(get_post_dto, envelope="data")
     def get(self, username, pagination_no):
         return PostService.get_user_posts(username, int(pagination_no))

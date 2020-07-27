@@ -1,5 +1,4 @@
 import uuid, datetime
-from sqlalchemy.orm import aliased
 from app.main import db
 from app.main.models.user_model import UserModel
 from app.main.models.pet_model import PetModel
@@ -11,12 +10,13 @@ class PetService:
     def create_pet(auth_token, post_data):
         try:
             get_current_user = UserService.get_current_user(auth_token)
-            get_specie_row = SpecieModel.query.filter_by(public_id=post_data["specie_id"]).first()
-            get_breed_row = BreedModel.query.filter_by(public_id=post_data["breed_id"]).first()
+            get_specie_row = SpecieModel.query.filter_by(public_id=post_data["group_specie_id"]).first()
+            get_breed_row = BreedModel.query.filter_by(public_id=post_data["subgroup_breed_id"]).first()
 
             if get_specie_row.public_id == get_breed_row.parent_specie_id:
+                new_public_id = str(uuid.uuid4())
                 new_pet = PetModel(
-                    public_id = str(uuid.uuid4()),
+                    public_id = new_public_id,
                     name = post_data["name"],
                     bio = post_data["bio"],
                     birthday = post_data["birthday"],
@@ -26,15 +26,15 @@ class PetService:
                     cover_photo_fn = post_data["cover_photo_fn"],
                     registered_on = datetime.datetime.utcnow(),
                     owner_user_username = get_current_user.username,
-                    specie_id = post_data["specie_id"],
-                    breed_id = post_data["breed_id"]
+                    group_specie_id = post_data["group_specie_id"],
+                    subgroup_breed_id = post_data["subgroup_breed_id"]
                 )
                 
                 db.session.add(new_pet)
 
                 db.session.commit()
 
-                return 200
+                return new_public_id
 
         except Exception:
             return None
@@ -42,9 +42,7 @@ class PetService:
     @staticmethod
     def get_user_pets(username, pagination_no):
         try:
-            get_pet_list = PetModel.query.filter_by(owner_user_username=username).paginate(page=pagination_no, per_page=6).items
-
-            return [row.__dto__() for row in get_pet_list]
+            return PetModel.query.filter_by(owner_user_username=username).paginate(page=pagination_no, per_page=6).items
 
         except Exception:
             return None

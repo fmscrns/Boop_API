@@ -1,10 +1,8 @@
 from flask import request
 from flask_restplus import Resource
-from ..util.decorator import auth_token_required
-from ..services.user_service import UserService
-from ..services.post_service import PostService
-from ..services.comment_service import CommentService
-from ..util.dto import CommentDto
+from app.main.util.decorator import auth_token_required
+from app.main.services.comment_service import CommentService
+from app.main.util.dto import CommentDto
 
 api = CommentDto.api
 get_comment_dto = CommentDto.get_comment
@@ -25,7 +23,7 @@ class CommentList(Resource):
 @api.param("pagination_no", "pagination number")
 class PostCommentList(Resource):
     @auth_token_required
-    @api.doc("get comments of a post")
+    @api.doc("get post comments")
     @api.marshal_list_with(get_comment_dto, envelope="data")
     def get(self, post_id, pagination_no):
         return CommentService.get_post_comments(post_id, int(pagination_no))

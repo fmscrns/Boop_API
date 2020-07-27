@@ -1,8 +1,8 @@
 from flask import request
 from flask_restplus import Resource
-from ..util.decorator import auth_token_required
+from app.main.util.decorator import auth_token_required
 from app.main.services.auth_service import AuthService
-from ..util.dto import AuthDto
+from app.main.util.dto import AuthDto
 
 api = AuthDto.api
 provide_auth_token_dto = AuthDto.provide_auth_token

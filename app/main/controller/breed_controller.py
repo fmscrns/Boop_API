@@ -1,9 +1,8 @@
 from flask import request
 from flask_restplus import Resource
-from ..util.decorator import auth_token_required
-from ..services.specie_service import SpecieService
-from ..services.breed_service import BreedService
-from ..util.dto import BreedDto
+from app.main.util.decorator import auth_token_required
+from app.main.services.breed_service import BreedService
+from app.main.util.dto import BreedDto
 
 api = BreedDto.api
 get_breed_dto = BreedDto.get_breed
@@ -23,7 +22,7 @@ class BreedList(Resource):
 @api.param("specie_id", "specie identifier")
 class SpecieBreedList(Resource):
     @auth_token_required
-    @api.doc("get breeds of a specie")
+    @api.doc("get specie breeds")
     @api.marshal_list_with(get_breed_dto, envelope="data")
     def get(self, specie_id):
         return BreedService.get_specie_breeds(specie_id)

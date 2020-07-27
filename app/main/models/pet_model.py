@@ -1,7 +1,7 @@
-from .. import db
-from app.main.models import user_model
-from app.main.models import specie_model
-from app.main.models import breed_model
+from app.main import db
+from app.main.models.user_model import UserModel
+from app.main.models.specie_model import SpecieModel
+from app.main.models.breed_model import BreedModel
 
 class PetModel(db.Model):
     __tablename__ = "pet"
@@ -17,28 +17,8 @@ class PetModel(db.Model):
     cover_photo_fn = db.Column(db.String(50), default="pet-default-cover-photo.jpg", nullable=False)
     registered_on = db.Column(db.DateTime, nullable=False)
     owner_user_username = db.Column(db.String, db.ForeignKey("user.username"), nullable=False)
-    specie_id = db.Column(db.String, db.ForeignKey("specie.public_id"), nullable=False)
-    breed_id = db.Column(db.String, db.ForeignKey("breed.public_id"), nullable=False)
+    group_specie_id = db.Column(db.String, db.ForeignKey("specie.public_id"), nullable=False)
+    subgroup_breed_id = db.Column(db.String, db.ForeignKey("breed.public_id"), nullable=False)
  
     def __repr__(self):
         return "<pet '{}'>".format(self.name)
-
-    def __dto__(self):
-        get_specie_row = specie_model.SpecieModel.query.filter_by(public_id=self.pet_has_specie_rel).first()
-        get_breed_row = breed_model.BreedModel.query.filter_by(public_id=self.pet_has_breed_rel).first()
-
-        return {
-            "id": self.id,
-            "public_id": self.public_id,
-            "name": self.name,
-            "bio": self.bio,
-            "birthday": self.birthday,
-            "sex": self.sex,
-            "status": self.status,
-            "profile_photo_fn": self.profile_photo_fn,
-            "cover_photo_fn": self.cover_photo_fn,
-            "registered_on": self.registered_on,
-            "user_owner": self.user_creates_pet_rel,
-            "specie_kind": get_specie_row.name,
-            "breed_kind": get_breed_row.name
-        }

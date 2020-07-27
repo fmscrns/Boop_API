@@ -1,9 +1,8 @@
 from flask import request
 from flask_restplus import Resource
-from ..util.decorator import auth_token_required
-from ..services.user_service import UserService
-from ..services.pet_service import PetService
-from ..util.dto import PetDto
+from app.main.util.decorator import auth_token_required
+from app.main.services.pet_service import PetService
+from app.main.util.dto import PetDto
 
 api = PetDto.api
 get_pet_dto = PetDto.get_pet
@@ -26,7 +25,7 @@ class PetList(Resource):
 @api.param("pagination_no", "pagination number")
 class UserPetList(Resource):
     @auth_token_required
-    @api.doc("get pets of a user")
+    @api.doc("get user pets")
     @api.marshal_list_with(get_pet_dto, envelope="data")
     def get(self, username, pagination_no):
         return PetService.get_user_pets(username, int(pagination_no))
@@ -41,7 +40,7 @@ class Pet(Resource):
         return PetService.get_pet(pet_id)
 
     @auth_token_required
-    @api.doc("update a pet")
+    @api.doc("update pet")
     @api.expect(update_pet_dto, validate=True)
     def put(self, pet_id):
         authorization_header = request.headers.get("Authorization")

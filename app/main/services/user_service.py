@@ -6,10 +6,10 @@ class UserService:
     @staticmethod
     def create_user(post_data):
         try:
-            get_user_row_by_username = UserModel.query.filter_by(username=post_data["username"]).first()
-            get_user_row_by_email_address = UserModel.query.filter_by(email_address=post_data["email_address"]).first()
+            get_user_row_w_username = UserModel.query.filter_by(username=post_data["username"]).first()
+            get_user_row_w_email = UserModel.query.filter_by(email=post_data["email"]).first()
 
-            if not (get_user_row_by_username or get_user_row_by_email_address):
+            if not (get_user_row_w_username or get_user_row_w_email):
                 new_username = post_data["username"]
 
                 new_user = UserModel(
@@ -17,7 +17,7 @@ class UserService:
                     username = new_username,
                     first_name = post_data["first_name"],
                     last_name = post_data["last_name"],
-                    email_address = post_data["email_address"],
+                    email = post_data["email"],
                     password = post_data["password"],
                     contact_no = post_data["contact_no"],
                     registered_on = datetime.datetime.utcnow()
@@ -33,9 +33,9 @@ class UserService:
             return None
 
     @staticmethod
-    def get_user(username_or_email_address):
+    def get_user(username_or_email):
         try:
-            return UserModel.query.filter_by(username=username_or_email_address).first() or UserModel.query.filter_by(email_address=username_or_email_address).first()
+            return UserModel.query.filter_by(username=username_or_email).first() or UserModel.query.filter_by(email=username_or_email).first()
 
         except Exception as e:
             return None

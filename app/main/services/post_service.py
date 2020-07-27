@@ -33,9 +33,7 @@ class PostService:
     @staticmethod
     def get_user_posts(username, pagination_no):
         try:
-            get_post_list = PostModel.query.filter_by(creator_user_id=username).paginate(page=pagination_no, per_page=6).items
-
-            return [row.__dto__() for row in get_post_list]
+            return PostModel.query.filter_by(creator_user_id=username).paginate(page=pagination_no, per_page=6).items
 
         except Exception:
             return None
@@ -43,7 +41,7 @@ class PostService:
     @staticmethod
     def get_post(post_id):
         try:
-            return PostModel.query.filter_by(public_id=post_id).first().__dto__()
+            return PostModel.query.filter_by(public_id=post_id).first()
 
         except Exception:
             return None
@@ -54,7 +52,7 @@ class PostService:
             get_current_user = UserService.get_current_user(auth_token)
             get_post_row = PostModel.query.filter_by(public_id=post_id).first()
 
-            if get_post_row.creator_user_id == get_current_user.username:
+            if get_post_row.poster_user_username == get_current_user.username:
                 db.session.delete(get_post_row)
 
                 db.session.commit()

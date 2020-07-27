@@ -8,7 +8,7 @@ class BreedService:
     @staticmethod
     def create_breed(post_data):
         try:
-            get_specie_row = SpecieModel.query.filter_by(public_id=post_data["specie_id"]).first()
+            get_specie_row = SpecieModel.query.filter_by(public_id=post_data["parent_specie_id"]).first()
 
             new_breed = BreedModel(
                 public_id = str(uuid.uuid4()),

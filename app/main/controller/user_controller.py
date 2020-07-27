@@ -1,8 +1,8 @@
 from flask import request
 from flask_restplus import Resource
-from ..util.decorator import auth_token_required
-from ..services.user_service import UserService
-from ..util.dto import UserDto
+from app.main.util.decorator import auth_token_required
+from app.main.services.user_service import UserService
+from app.main.util.dto import UserDto
 
 api = UserDto.api
 get_user_dto = UserDto.get_user
@@ -19,14 +19,14 @@ class UserList(Resource):
         
         return UserService.create_user(post_data)
 
-@api.route("/user/<username_or_email_address>")
-@api.param("username_or_email_address", "user identifier")
+@api.route("/user/<username_or_email>")
+@api.param("username_or_email", "user identifier")
 class User(Resource):
     @auth_token_required
     @api.doc("get user")
     @api.marshal_with(get_user_dto, skip_none=True)
-    def get(self, username_or_email_address):
-        return UserService.get_user(username_or_email_address)
+    def get(self, username_or_email):
+        return UserService.get_user(username_or_email)
 
 @api.route("/current_user")
 class CurrentUser(Resource):
