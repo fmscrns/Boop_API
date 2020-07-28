@@ -1,6 +1,4 @@
 from app.main import db
-from app.main.models.user_model import UserModel
-from app.main.models.comment_model import CommentModel
 
 class PostModel(db.Model):
     __tablename__ = "post"
@@ -10,7 +8,7 @@ class PostModel(db.Model):
     content = db.Column(db.String(300), nullable=False)
     photo_fn = db.Column(db.String(50))
     registered_on = db.Column(db.DateTime, nullable=False)
-    poster_user_username = db.Column(db.String, db.ForeignKey("user.username"), nullable=False)
+    poster_user_username = db.Column(db.String, db.ForeignKey("poster.username"), nullable=False)
 
     comment_parent_rel = db.relationship("CommentModel", backref="parent", lazy=True)
     

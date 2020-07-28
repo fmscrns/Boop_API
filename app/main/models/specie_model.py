@@ -1,6 +1,4 @@
 from app.main import db
-from app.main.models.pet_model import PetModel
-from app.main.models.breed_model import BreedModel
 
 class SpecieModel(db.Model):
     __tablename__ = "specie"

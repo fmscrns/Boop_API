@@ -1,16 +1,13 @@
 import jwt, datetime
 from app.main import db, flask_bcrypt
 from app.main.config import key
-from app.main.models.pet_model import PetModel
-from app.main.models.post_model import PostModel
-from app.main.models.comment_model import CommentModel
 from app.main.services.auth_token_blacklist_service import AuthTokenBlacklistService
 
 class UserModel(db.Model):
     __tablename__ = "user"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    is_admin = db.Column(db.Boolean, default=False, nullable=False)
+    is_admin = db.Column(db.Boolean, default=False)
     username = db.Column(db.String(50), unique=True, nullable=False)
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
@@ -24,9 +21,9 @@ class UserModel(db.Model):
 
     post_poster_rel = db.relationship("PostModel", backref="poster", lazy=True)
     comment_commenter_rel = db.relationship("CommentModel", backref="commenter", lazy=True)
-    friendship_sender_rel = db.relationship("UserFriendListModel", backref="sender", lazy=True)
-    friendship_recipient_rel = db.relationship("UserFriendListModel", backref="recipient", lazy=True)
-    
+    friendship_sender_rel = db.relationship("FriendshipModel", backref="sender", lazy=True)
+    follow_follower_rel = db.relationship("FollowModel", backref="follower", lazy=True)
+
     @property
     def password(self):
         raise AttributeError("password: write-only field")

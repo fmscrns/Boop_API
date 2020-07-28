@@ -1,7 +1,4 @@
 from app.main import db
-from app.main.models.user_model import UserModel
-from app.main.models.specie_model import SpecieModel
-from app.main.models.breed_model import BreedModel
 
 class PetModel(db.Model):
     __tablename__ = "pet"
@@ -16,9 +13,11 @@ class PetModel(db.Model):
     profile_photo_fn = db.Column(db.String(50), default="pet-default-profile-photo.jpg", nullable=False)
     cover_photo_fn = db.Column(db.String(50), default="pet-default-cover-photo.jpg", nullable=False)
     registered_on = db.Column(db.DateTime, nullable=False)
-    owner_user_username = db.Column(db.String, db.ForeignKey("user.username"), nullable=False)
-    group_specie_id = db.Column(db.String, db.ForeignKey("specie.public_id"), nullable=False)
-    subgroup_breed_id = db.Column(db.String, db.ForeignKey("breed.public_id"), nullable=False)
+    owner_user_username = db.Column(db.String, db.ForeignKey("owner.username"), nullable=False)
+    group_specie_id = db.Column(db.String, db.ForeignKey("group.public_id"), nullable=False)
+    subgroup_breed_id = db.Column(db.String, db.ForeignKey("subgroup.public_id"), nullable=False)
+    
+    follow_followed_rel = db.relationship("FollowModel", backref="followed", lazy=True)
  
     def __repr__(self):
         return "<pet '{}'>".format(self.name)

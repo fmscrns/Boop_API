@@ -68,7 +68,7 @@ def setup_petKindList():
         breed = BreedModel(
             name=breed["breed_name"],
             public_id=breed["public_id"],
-            specie_has_breeds_rel=breed["specie_id"]
+            parent_specie_id=breed["specie_id"]
         )
 
         db.session.add(breed)
