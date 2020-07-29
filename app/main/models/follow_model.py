@@ -1,6 +1,6 @@
 from app.main import db
 
-class UsersFollowPetsModel(db.Model):
+class FollowModel(db.Model):
     __tablename__ = "follow"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)

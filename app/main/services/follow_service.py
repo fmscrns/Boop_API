@@ -14,7 +14,7 @@ class FollowService:
             new_follow = FollowModel(
                 public_id = new_public_id,
                 registered_on = datetime.datetime.utcnow(),
-                follow_user_username = get_current_user.username,
+                following_user_username = get_current_user.username,
                 followed_pet_id = post_data["followed_pet_id"]
             )
             
@@ -28,7 +28,7 @@ class FollowService:
             return None
 
     @staticmethod
-    def get_user_following(username, pagination_no):
+    def get_user_follows(username, pagination_no):
         try:
             return FollowModel.query.filter_by(following_user_username=username).paginate(page=pagination_no, per_page=6).items
         
@@ -36,7 +36,7 @@ class FollowService:
             return None
 
     @staticmethod
-    def get_pet_followers(pet_id, pagination_no):
+    def get_pet_follows(pet_id, pagination_no):
         try:
             return FollowModel.query.filter_by(followed_pet_id=pet_id).paginate(page=pagination_no, per_page=6).items
         
@@ -47,22 +47,6 @@ class FollowService:
     def get_follow(follow_id):
         try:
             return FollowModel.query.filter_by(public_id=follow_id).first()
-
-        except Exception:
-            return None
-
-    @staticmethod
-    def update_follow(auth_token, follow_id):
-        try:
-            get_current_user = UserService.get_current_user(auth_token)
-            get_follow_row = FollowModel.query.filter_by(public_id=follow_id).first()
-
-            if get_follow_row.recipient_user_username == get_current_user.username:
-                get_follow_row.is_accepted = 1
-                
-                db.session.commit()
-
-                return 200
 
         except Exception:
             return None
